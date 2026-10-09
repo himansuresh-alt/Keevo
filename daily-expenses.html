@@ -1,0 +1,4562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>Your Expenses</title>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:#f8f8f7;
+
+    color:#171717;
+
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page{
+
+    width:100%;
+
+    max-width:520px;
+
+    margin:0 auto;
+
+    padding-bottom:100px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.top-header{
+
+    height:58px;
+
+    background:#ffffff;
+
+    border-bottom:
+        1px solid #eeeeee;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0 18px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+}
+
+.header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    min-width:0;
+}
+
+.back-button{
+
+    width:30px;
+    height:40px;
+
+    border:none;
+
+    background:transparent;
+
+    color:#222;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    line-height:1;
+
+    padding:0;
+}
+
+.header-title{
+
+    font-size:16px;
+
+    font-weight:800;
+
+    letter-spacing:-.3px;
+}
+
+.profile-circle{
+
+    width:38px;
+    height:38px;
+
+    border-radius:50%;
+
+    background:#fff0e8;
+
+    border:
+        1px solid #ffe0d2;
+
+    color:#e84f2c;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:15px;
+
+    font-weight:800;
+}
+
+
+/* =====================================================
+   REFERENCE CHAT HERO
+===================================================== */
+
+.chat-hero{
+
+    margin:
+        18px
+        18px
+        0;
+
+    padding:
+        17px
+        15px;
+
+    min-height:120px;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff5ee 0%,
+            #fffaf7 100%
+        );
+
+    border:
+        1px solid #f2e5de;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+}
+
+.robot-wrap{
+
+    width:105px;
+
+    height:86px;
+
+    flex-shrink:0;
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+.robot-body{
+
+    width:61px;
+
+    height:53px;
+
+    border-radius:17px;
+
+    background:#273541;
+
+    border:
+        4px solid #ff663b;
+
+    position:relative;
+
+    box-shadow:
+        0 5px 12px
+        rgba(0,0,0,.10);
+}
+
+.robot-body::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+
+    left:13px;
+
+    top:14px;
+
+    box-shadow:
+        25px 0 0 #ffffff;
+}
+
+.robot-body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:9px;
+
+    border-bottom:
+        3px solid #ffffff;
+
+    border-radius:
+        0 0 15px 15px;
+
+    left:17px;
+
+    bottom:8px;
+}
+
+.robot-antenna{
+
+    position:absolute;
+
+    width:3px;
+    height:18px;
+
+    background:#ff663b;
+
+    top:2px;
+
+    left:51px;
+
+    border-radius:3px;
+}
+
+.robot-dot{
+
+    position:absolute;
+
+    width:7px;
+    height:7px;
+
+    background:#ff663b;
+
+    border-radius:50%;
+
+    top:-5px;
+
+    left:49px;
+}
+
+.robot-ear-left,
+.robot-ear-right{
+
+    position:absolute;
+
+    width:12px;
+    height:24px;
+
+    border-radius:8px;
+
+    background:#ff663b;
+
+    top:31px;
+}
+
+.robot-ear-left{
+
+    left:9px;
+}
+
+.robot-ear-right{
+
+    right:9px;
+}
+
+.robot-arm-left,
+.robot-arm-right{
+
+    position:absolute;
+
+    width:25px;
+    height:4px;
+
+    background:#ff663b;
+
+    border-radius:4px;
+
+    top:51px;
+}
+
+.robot-arm-left{
+
+    left:0;
+
+    transform:
+        rotate(-25deg);
+}
+
+.robot-arm-right{
+
+    right:0;
+
+    transform:
+        rotate(25deg);
+}
+
+.robot-content{
+
+    min-width:0;
+
+    flex:1;
+}
+
+.robot-name{
+
+    font-size:17px;
+
+    font-weight:800;
+
+    margin-bottom:7px;
+
+    letter-spacing:-.3px;
+}
+
+.robot-text{
+
+    color:#666;
+
+    font-size:13px;
+
+    line-height:1.45;
+}
+
+
+/* =====================================================
+   EXAMPLE BOX
+===================================================== */
+
+.example-box{
+
+    margin:
+        13px
+        18px
+        0;
+
+    padding:
+        16px
+        17px;
+
+    background:#f0f1f3;
+
+    border:
+        1px solid #ebedef;
+
+    border-radius:20px;
+}
+
+.example-title{
+
+    color:#666;
+
+    font-size:12px;
+
+    margin-bottom:7px;
+}
+
+.example-line{
+
+    font-size:13px;
+
+    color:#272727;
+
+    line-height:1.7;
+
+    display:flex;
+
+    gap:8px;
+}
+
+.example-arrow{
+
+    color:#888;
+
+    flex-shrink:0;
+}
+
+
+/* =====================================================
+   CHAT AREA
+===================================================== */
+
+.chat-section{
+
+    padding:
+        0
+        18px;
+}
+
+.chat-messages{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:9px;
+
+    padding-top:14px;
+}
+
+
+/* =====================================================
+   USER MESSAGE
+===================================================== */
+
+.user-row{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:flex-end;
+}
+
+.user-bubble{
+
+    max-width:78%;
+
+    background:#ff6337;
+
+    color:#ffffff;
+
+    padding:
+        10px
+        13px;
+
+    border-radius:
+        17px
+        17px
+        5px
+        17px;
+
+    font-size:13px;
+
+    line-height:1.45;
+
+    box-shadow:
+        0 5px 13px
+        rgba(255,99,55,.14);
+}
+
+.user-time{
+
+    text-align:right;
+
+    font-size:9px;
+
+    opacity:.75;
+
+    margin-top:4px;
+}
+
+
+/* =====================================================
+   BOT MESSAGE
+===================================================== */
+
+.bot-row{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    gap:7px;
+
+    align-items:flex-end;
+}
+
+.small-bot{
+
+    width:31px;
+    height:31px;
+
+    flex-shrink:0;
+
+    border-radius:10px;
+
+    background:#fff0e9;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:relative;
+}
+
+.small-bot-face{
+
+    width:20px;
+    height:17px;
+
+    border-radius:6px;
+
+    background:#273541;
+
+    border:
+        2px solid #ff663b;
+
+    position:relative;
+}
+
+.small-bot-face::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:3px;
+    height:3px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+
+    left:4px;
+
+    top:4px;
+
+    box-shadow:
+        7px 0 0 #ffffff;
+}
+
+.bot-bubble{
+
+    max-width:78%;
+
+    background:#ffffff;
+
+    border:
+        1px solid #e9e9e9;
+
+    color:#333;
+
+    padding:
+        10px
+        13px;
+
+    border-radius:
+        17px
+        17px
+        17px
+        5px;
+
+    font-size:13px;
+
+    line-height:1.45;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0,0,0,.035);
+}
+
+.bot-time{
+
+    color:#aaa;
+
+    font-size:9px;
+
+    margin-top:4px;
+}
+
+
+/* =====================================================
+   RESULT MESSAGE
+===================================================== */
+
+.result-bubble{
+
+    max-width:84%;
+
+    background:#ffffff;
+
+    border:
+        1px solid #e8e8e8;
+
+    border-radius:
+        17px
+        17px
+        17px
+        5px;
+
+    padding:
+        11px
+        13px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,.035);
+}
+
+.result-title{
+
+    font-size:14px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.result-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        6px
+        0;
+
+    border-bottom:
+        1px solid #f0f0f0;
+
+    font-size:12px;
+}
+
+.result-item:last-child{
+
+    border-bottom:none;
+}
+
+.result-name{
+
+    color:#555;
+}
+
+.result-amount{
+
+    font-weight:800;
+}
+
+.result-total{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding-top:8px;
+
+    margin-top:3px;
+
+    font-size:13px;
+
+    font-weight:800;
+}
+
+
+/* =====================================================
+   TYPING
+===================================================== */
+
+.typing{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:4px;
+}
+
+.typing span{
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#999;
+
+    animation:
+        typing 1s infinite;
+}
+
+.typing span:nth-child(2){
+
+    animation-delay:.15s;
+}
+
+.typing span:nth-child(3){
+
+    animation-delay:.3s;
+}
+
+@keyframes typing{
+
+    0%,
+    100%{
+        opacity:.25;
+    }
+
+    50%{
+        opacity:1;
+    }
+}
+
+  /* =====================================================
+   INPUT AREA
+===================================================== */
+
+.input-section{
+
+    padding:
+        17px
+        18px
+        0;
+}
+
+.input-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+.expense-input{
+
+    flex:1;
+
+    min-width:0;
+
+    height:51px;
+
+    border:
+        1px solid #dedede;
+
+    border-radius:27px;
+
+    background:#ffffff;
+
+    outline:none;
+
+    padding:
+        0
+        17px;
+
+    font-size:13px;
+
+    color:#222;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0,0,0,.025);
+}
+
+.expense-input::placeholder{
+
+    color:#999;
+}
+
+.expense-input:focus{
+
+    border-color:#ff6337;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,99,55,.08);
+}
+
+.send-button{
+
+    width:51px;
+    height:51px;
+
+    flex-shrink:0;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#ff6337;
+
+    color:#ffffff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:21px;
+
+    box-shadow:
+        0 7px 16px
+        rgba(255,99,55,.20);
+}
+
+.send-button:active{
+
+    transform:scale(.95);
+}
+
+.send-button:disabled{
+
+    opacity:.55;
+
+    cursor:default;
+}
+
+
+/* =====================================================
+   TODAY'S ENTRIES
+===================================================== */
+
+.entries-section{
+
+    margin:
+        25px
+        18px
+        0;
+}
+
+.entries-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:10px;
+}
+
+.entries-title{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    letter-spacing:-.4px;
+}
+
+.entries-count{
+
+    font-size:11px;
+
+    color:#999;
+}
+
+.entries-list{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:19px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,.025);
+}
+
+.expense-card{
+
+    min-height:68px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:9px;
+
+    padding:
+        10px
+        12px;
+
+    border-bottom:
+        1px solid #eeeeee;
+}
+
+.expense-card:last-child{
+
+    border-bottom:none;
+}
+
+.expense-left{
+
+    min-width:0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.category-icon{
+
+    width:39px;
+    height:39px;
+
+    flex-shrink:0;
+
+    border-radius:50%;
+
+    background:#f0f8df;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:18px;
+}
+
+.expense-info{
+
+    min-width:0;
+}
+
+.expense-category{
+
+    font-size:10px;
+
+    color:#999;
+
+    margin-bottom:2px;
+}
+
+.expense-description{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    max-width:175px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.expense-date{
+
+    font-size:9px;
+
+    color:#aaa;
+
+    margin-top:3px;
+}
+
+.expense-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    flex-shrink:0;
+}
+
+.expense-amount{
+
+    font-size:13px;
+
+    font-weight:800;
+
+    margin-right:2px;
+}
+
+.action-button{
+
+    width:30px;
+    height:30px;
+
+    border:
+        1px solid #e5e5e5;
+
+    border-radius:9px;
+
+    background:#ffffff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:12px;
+}
+
+.action-button.delete{
+
+    color:#df4545;
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty-box{
+
+    padding:
+        28px
+        15px;
+
+    text-align:center;
+
+    color:#999;
+
+    font-size:12px;
+
+    background:#ffffff;
+}
+
+.loading-box{
+
+    padding:
+        28px
+        15px;
+
+    text-align:center;
+
+    color:#aaa;
+
+    font-size:12px;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-box{
+
+    display:none;
+
+    margin:
+        13px
+        18px
+        0;
+
+    padding:
+        10px
+        13px;
+
+    background:#fff0f0;
+
+    border:
+        1px solid #f0cccc;
+
+    color:#b33131;
+
+    border-radius:12px;
+
+    font-size:12px;
+}
+
+/* =====================================================
+   EXACT 3D FIXED NAVIGATION
+   SAME SIZE AS DASHBOARD
+===================================================== */
+
+.bottom-nav{
+    position:fixed;
+
+    left:20px;
+    right:20px;
+    bottom:18px;
+
+    height:76px;
+
+    background:rgba(255,255,255,.96);
+
+    border:1px solid rgba(255,255,255,.95);
+
+    border-radius:30px;
+
+    z-index:200;
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.12),
+        0 4px 12px rgba(0,0,0,.06),
+        inset 0 1px 0 rgba(255,255,255,1);
+
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+}
+
+
+/* IMPORTANT:
+   FULL WIDTH — DO NOT LIMIT IT
+*/
+
+.bottom-inner{
+    width:100%;
+    max-width:none;
+
+    height:100%;
+
+    margin:0;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    align-items:center;
+
+    position:relative;
+}
+
+
+.nav-item{
+    width:100%;
+    height:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    color:#888;
+
+    font-size:10px;
+
+    font-weight:600;
+
+    text-decoration:none;
+
+    border-radius:24px;
+
+    transition:
+        transform .18s ease,
+        color .18s ease,
+        background .18s ease;
+}
+
+
+.nav-item:active{
+    transform:scale(.94);
+}
+
+
+.nav-icon{
+    width:24px;
+    height:24px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:21px;
+
+    line-height:1;
+
+    color:#777;
+}
+
+
+/* ACTIVE */
+
+.nav-item.active{
+    color:#ff6337;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff8f4,
+            #fff2eb
+        );
+
+    box-shadow:
+        0 7px 18px rgba(255,99,55,.08),
+        inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+
+.nav-item.active .nav-icon{
+    color:#ff6337;
+}
+
+
+/* =====================================================
+   CENTER 3D ADD
+===================================================== */
+
+.add-nav{
+    position:relative;
+
+    margin-top:-25px;
+
+    justify-content:flex-end;
+
+    padding-bottom:3px;
+
+    background:transparent !important;
+
+    box-shadow:none !important;
+}
+
+
+.add-circle{
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    border:4px solid #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff7040,
+            #f4511e
+        );
+
+    color:#ffffff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:30px;
+
+    font-weight:300;
+
+    box-shadow:
+        0 10px 24px rgba(255,99,55,.30),
+        0 4px 8px rgba(0,0,0,.08),
+        inset 0 2px 3px rgba(255,255,255,.30);
+
+    transition:
+        transform .18s ease;
+}
+
+
+.add-nav:active .add-circle{
+    transform:scale(.94);
+}
+
+
+.add-label{
+    font-size:10px;
+
+    color:#777;
+
+    margin-top:3px;
+
+    font-weight:600;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:480px){
+
+    .bottom-nav{
+        left:20px;
+        right:20px;
+
+        bottom:18px;
+
+        height:76px;
+
+        border-radius:30px;
+    }
+
+}
+
+
+@media(max-width:360px){
+
+    .bottom-nav{
+        left:20px;
+        right:20px;
+    }
+
+}
+  
+/* =====================================================
+   EDIT MODAL
+===================================================== */
+
+.modal-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(0,0,0,.45);
+
+    z-index:500;
+
+    align-items:flex-end;
+
+    justify-content:center;
+}
+
+.modal-overlay.show{
+
+    display:flex;
+}
+
+.modal{
+
+    width:100%;
+
+    max-width:520px;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    background:#ffffff;
+
+    border-radius:
+        24px
+        24px
+        0
+        0;
+
+    padding:
+        21px
+        18px
+        30px;
+}
+
+.modal-title{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    margin-bottom:16px;
+}
+
+.form-group{
+
+    margin-bottom:12px;
+}
+
+.form-label{
+
+    display:block;
+
+    font-size:11px;
+
+    color:#666;
+
+    font-weight:700;
+
+    margin-bottom:5px;
+}
+
+.form-control{
+
+    width:100%;
+
+    height:45px;
+
+    border:
+        1px solid #dddddd;
+
+    border-radius:11px;
+
+    padding:
+        0 12px;
+
+    outline:none;
+
+    background:#ffffff;
+
+    font-size:13px;
+}
+
+.form-control:focus{
+
+    border-color:#ff6337;
+}
+
+.modal-actions{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-top:17px;
+}
+
+.modal-button{
+
+    flex:1;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:13px;
+
+    font-weight:800;
+}
+
+.cancel-button{
+
+    background:#eeeeee;
+
+    color:#444;
+}
+
+.save-button{
+
+    background:#ff6337;
+
+    color:#ffffff;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:380px){
+
+    .chat-hero{
+
+        margin-left:14px;
+        margin-right:14px;
+    }
+
+    .example-box{
+
+        margin-left:14px;
+        margin-right:14px;
+    }
+
+    .chat-section{
+
+        padding-left:14px;
+        padding-right:14px;
+    }
+
+    .input-section{
+
+        padding-left:14px;
+        padding-right:14px;
+    }
+
+    .entries-section{
+
+        margin-left:14px;
+        margin-right:14px;
+    }
+
+    .robot-wrap{
+
+        width:94px;
+    }
+
+    .robot-name{
+
+        font-size:16px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="top-header">
+
+    <div class="header-left">
+
+        <button
+            type="button"
+            class="back-button"
+            onclick="goBack()"
+            aria-label="Back"
+        >
+            ‹
+        </button>
+
+        <div class="header-title">
+            Your Expenses
+        </div>
+
+    </div>
+
+
+    <div
+        class="profile-circle"
+        id="profileCircle"
+    >
+        S
+    </div>
+
+</header>
+
+
+<main class="page">
+
+
+<!-- =====================================================
+     REFERENCE ASSISTANT CARD
+===================================================== -->
+
+<section class="chat-hero">
+
+
+    <div class="robot-wrap">
+
+        <div class="robot-ear-left"></div>
+
+        <div class="robot-ear-right"></div>
+
+        <div class="robot-arm-left"></div>
+
+        <div class="robot-arm-right"></div>
+
+        <div class="robot-antenna"></div>
+
+        <div class="robot-dot"></div>
+
+        <div class="robot-body"></div>
+
+    </div>
+
+
+    <div class="robot-content">
+
+        <div
+            class="robot-name"
+            id="assistantName"
+        >
+            Hi Suresh 👋
+        </div>
+
+        <div class="robot-text">
+
+            Tell me what you spent.<br>
+
+            I'll take care of the rest.
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     EXAMPLES
+===================================================== -->
+
+<section class="example-box">
+
+    <div class="example-title">
+
+        For example, you can say:
+
+    </div>
+
+
+    <div class="example-line">
+
+        <span class="example-arrow">
+            ↳
+        </span>
+
+        <span>
+            Tea 50 Petrol 200
+        </span>
+
+    </div>
+
+
+    <div class="example-line">
+
+        <span class="example-arrow">
+            ↳
+        </span>
+
+        <span>
+            Lunch 90
+        </span>
+
+    </div>
+
+
+    <div class="example-line">
+
+        <span class="example-arrow">
+            ↳
+        </span>
+
+        <span>
+            Vegetables 300
+        </span>
+
+    </div>
+
+
+    <div class="example-line">
+
+        <span class="example-arrow">
+            ↳
+        </span>
+
+        <span>
+            Movie 2 tickets 400
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CHAT
+===================================================== -->
+
+<section class="chat-section">
+
+    <div
+        class="chat-messages"
+        id="chatMessages"
+    ></div>
+
+</section>
+
+
+<!-- =====================================================
+     INPUT
+===================================================== -->
+
+<section class="input-section">
+
+    <div class="input-row">
+
+        <input
+            id="expenseInput"
+            class="expense-input"
+            type="text"
+            placeholder="Type your expenses..."
+            autocomplete="off"
+        >
+
+
+        <button
+            id="sendBtn"
+            class="send-button"
+            type="button"
+            aria-label="Send"
+        >
+            ➤
+        </button>
+
+    </div>
+
+</section>
+
+
+<div
+    class="error-box"
+    id="errorBox"
+></div>
+
+
+<!-- =====================================================
+     TODAY'S ENTRIES
+===================================================== -->
+
+<section class="entries-section">
+
+    <div class="entries-header">
+
+        <div class="entries-title">
+            Today's Entries
+        </div>
+
+        <div
+            class="entries-count"
+            id="entriesCount"
+        >
+            0 entries
+        </div>
+
+    </div>
+
+
+    <div
+        class="entries-list"
+        id="entriesList"
+    >
+
+        <div class="loading-box">
+            Loading your expenses...
+        </div>
+
+    </div>
+
+</section>
+
+  <!-- =====================================================
+     EDIT MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="editModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-title">
+            Edit Expense
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Description
+            </label>
+
+            <input
+                id="editDescription"
+                class="form-control"
+                type="text"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Amount
+            </label>
+
+            <input
+                id="editAmount"
+                class="form-control"
+                type="number"
+                min="0"
+                step="0.01"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Category
+            </label>
+
+            <select
+                id="editCategory"
+                class="form-control"
+            >
+
+                <option value="Food">
+                    Food
+                </option>
+
+                <option value="Grocery">
+                    Grocery
+                </option>
+
+                <option value="Petrol">
+                    Petrol
+                </option>
+
+                <option value="Travel">
+                    Travel
+                </option>
+
+                <option value="Health">
+                    Health
+                </option>
+
+                <option value="Shopping">
+                    Shopping
+                </option>
+
+                <option value="Home">
+                    Home
+                </option>
+
+                <option value="Bills">
+                    Bills
+                </option>
+
+                <option value="Entertainment">
+                    Entertainment
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label class="form-label">
+                Expense Date
+            </label>
+
+            <input
+                id="editDate"
+                class="form-control"
+                type="date"
+            >
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                id="cancelEdit"
+                class="modal-button cancel-button"
+                type="button"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                id="saveEdit"
+                class="modal-button save-button"
+                type="button"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     MODERN 3D FIXED BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <div class="bottom-inner">
+
+        <!-- HOME -->
+
+        <a
+            href="dashboard.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <!-- BILLS -->
+
+        <a
+            href="my-bills.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ▤
+            </span>
+
+            <span>
+                Bills
+            </span>
+
+        </a>
+
+
+        <!-- ADD -->
+
+        <a
+            href="add-bill.html"
+            class="nav-item add-nav"
+        >
+
+            <span class="add-circle">
+                +
+            </span>
+
+            <span class="add-label">
+                Add
+            </span>
+
+        </a>
+
+
+        <!-- INSIGHTS -->
+
+        <a
+            href="summary.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ▥
+            </span>
+
+            <span>
+                Insights
+            </span>
+
+        </a>
+
+
+        <!-- ME -->
+
+        <a
+            href="profile.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                ♙
+            </span>
+
+            <span>
+                Me
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+<script>
+
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const input =
+    document.getElementById(
+        "expenseInput"
+    );
+
+
+const sendBtn =
+    document.getElementById(
+        "sendBtn"
+    );
+
+
+const chatMessages =
+    document.getElementById(
+        "chatMessages"
+    );
+
+
+const entriesList =
+    document.getElementById(
+        "entriesList"
+    );
+
+
+const entriesCount =
+    document.getElementById(
+        "entriesCount"
+    );
+
+
+const errorBox =
+    document.getElementById(
+        "errorBox"
+    );
+
+
+const profileCircle =
+    document.getElementById(
+        "profileCircle"
+    );
+
+
+const assistantName =
+    document.getElementById(
+        "assistantName"
+    );
+
+
+const editModal =
+    document.getElementById(
+        "editModal"
+    );
+
+
+const editDescription =
+    document.getElementById(
+        "editDescription"
+    );
+
+
+const editAmount =
+    document.getElementById(
+        "editAmount"
+    );
+
+
+const editCategory =
+    document.getElementById(
+        "editCategory"
+    );
+
+
+const editDate =
+    document.getElementById(
+        "editDate"
+    );
+
+
+const cancelEdit =
+    document.getElementById(
+        "cancelEdit"
+    );
+
+
+const saveEdit =
+    document.getElementById(
+        "saveEdit"
+    );
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let currentUser = null;
+
+let editingExpenseId = null;
+
+
+/* =====================================================
+   BACK
+===================================================== */
+
+function goBack(){
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function showError(
+    message
+){
+
+    errorBox.textContent =
+        message;
+
+    errorBox.style.display =
+        "block";
+
+}
+
+
+function hideError(){
+
+    errorBox.textContent =
+        "";
+
+    errorBox.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   TODAY
+===================================================== */
+
+function getToday(){
+
+    const now =
+        new Date();
+
+    return (
+        now.getFullYear() +
+        "-" +
+        String(
+            now.getMonth() + 1
+        ).padStart(2,"0") +
+        "-" +
+        String(
+            now.getDate()
+        ).padStart(2,"0")
+    );
+
+}
+
+
+/* =====================================================
+   FORMAT RUPEE
+===================================================== */
+
+function formatRupee(
+    amount
+){
+
+    const value =
+        Number(amount) || 0;
+
+    return (
+        "₹" +
+        value.toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        )
+    );
+
+}
+
+
+/* =====================================================
+   FORMAT DATE
+===================================================== */
+
+function formatDate(
+    value
+){
+
+    if(!value){
+
+        return "-";
+
+    }
+
+
+    const parts =
+        String(value).split("-");
+
+
+    if(
+        parts.length !== 3
+    ){
+
+        return value;
+
+    }
+
+
+    return (
+        parts[2] +
+        "/" +
+        parts[1] +
+        "/" +
+        parts[0]
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   FIRST NAME
+===================================================== */
+
+function getFirstName(
+    name
+){
+
+    const value =
+        String(
+            name || ""
+        ).trim();
+
+
+    if(!value){
+
+        return "there";
+
+    }
+
+
+    return value
+        .split(/\s+/)[0];
+
+}
+
+
+/* =====================================================
+   SESSION
+===================================================== */
+
+async function checkSession(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .auth
+        .getSession();
+
+
+    if(
+        error ||
+        !data ||
+        !data.session ||
+        !data.session.user
+    ){
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+    currentUser =
+        data.session.user;
+
+
+    return currentUser;
+
+}
+
+  /* =====================================================
+   LOAD USER NAME
+===================================================== */
+
+async function loadUserName(){
+
+    let fullName = "";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("profiles")
+        .select("full_name")
+        .eq(
+            "id",
+            currentUser.id
+        )
+        .maybeSingle();
+
+
+    if(
+        !error &&
+        data &&
+        data.full_name
+    ){
+
+        fullName =
+            data.full_name;
+
+    }
+
+
+    if(!fullName){
+
+        fullName =
+            currentUser
+            ?.user_metadata
+            ?.full_name || "";
+
+    }
+
+
+    if(!fullName){
+
+        fullName =
+            currentUser
+            ?.user_metadata
+            ?.name || "";
+
+    }
+
+
+    const firstName =
+        getFirstName(
+            fullName
+        );
+
+
+    assistantName.textContent =
+        `Hi ${firstName} 👋`;
+
+
+    profileCircle.textContent =
+        firstName
+        .charAt(0)
+        .toUpperCase();
+
+}
+
+
+/* =====================================================
+   CATEGORY KEYWORDS
+===================================================== */
+
+const CATEGORY_KEYWORDS = {
+
+    Grocery:[
+        "vegetable",
+        "vegetables",
+        "grocery",
+        "groceries",
+        "rice",
+        "milk",
+        "fruit",
+        "fruits",
+        "egg",
+        "eggs",
+        "chicken",
+        "fish",
+        "mutton",
+        "meat",
+        "kaikari",
+        "kaaykari",
+        "kaykari",
+        "kaikarigal",
+        "arisi",
+        "paal",
+        "pazham",
+        "mutta",
+        "kozhi",
+        "meen",
+        "aattukari",
+        "காய்கறி",
+        "காய்கறிகள்",
+        "அரிசி",
+        "பால்",
+        "பழம்",
+        "முட்டை",
+        "கோழி",
+        "மீன்"
+    ],
+
+
+    Petrol:[
+        "petrol",
+        "diesel",
+        "fuel",
+        "petrol bunk",
+        "fuel station",
+        "bike petrol",
+        "car petrol",
+        "பெட்ரோல்",
+        "டீசல்"
+    ],
+
+
+    Travel:[
+        "bus",
+        "train",
+        "auto",
+        "cab",
+        "taxi",
+        "uber",
+        "ola",
+        "metro",
+        "travel",
+        "transport",
+        "ticket",
+        "toll",
+        "பஸ்",
+        "பேருந்து",
+        "ரயில்",
+        "ஆட்டோ",
+        "டாக்சி",
+        "பயணம்"
+    ],
+
+
+    Food:[
+        "tea",
+        "coffee",
+        "lunch",
+        "dinner",
+        "breakfast",
+        "snack",
+        "snacks",
+        "food",
+        "hotel",
+        "restaurant",
+        "juice",
+        "biryani",
+        "dosa",
+        "idli",
+        "parotta",
+        "meals",
+        "chai",
+        "டீ",
+        "தேநீர்",
+        "காபி",
+        "சாப்பாடு",
+        "உணவு",
+        "தோசை",
+        "இட்லி"
+    ],
+
+
+    Health:[
+        "medicine",
+        "medicines",
+        "medical",
+        "doctor",
+        "hospital",
+        "clinic",
+        "pharmacy",
+        "tablet",
+        "tablets",
+        "health",
+        "scan",
+        "test",
+        "மருந்து",
+        "மருத்துவர்",
+        "மருத்துவமனை"
+    ],
+
+
+    Shopping:[
+        "shirt",
+        "dress",
+        "clothes",
+        "clothing",
+        "shoe",
+        "shoes",
+        "slipper",
+        "bag",
+        "shopping",
+        "சட்டை",
+        "ஆடை",
+        "துணி",
+        "செருப்பு",
+        "பை"
+    ],
+
+
+    Home:[
+        "rent",
+        "plumber",
+        "repair",
+        "electrician",
+        "carpenter",
+        "cleaning",
+        "maintenance",
+        "home",
+        "house",
+        "service",
+        "paint",
+        "வாடகை",
+        "பிளம்பர்",
+        "ரிப்பேர்",
+        "வீடு"
+    ],
+
+
+    Bills:[
+        "eb",
+        "electricity",
+        "electricity bill",
+        "water bill",
+        "water",
+        "gas bill",
+        "internet bill",
+        "wifi",
+        "mobile bill",
+        "recharge",
+        "bill",
+        "மின்சாரம்",
+        "மின்கட்டணம்",
+        "தண்ணீர்",
+        "ரீசார்ஜ்"
+    ],
+
+
+    Entertainment:[
+        "movie",
+        "cinema",
+        "game",
+        "concert",
+        "entertainment",
+        "outing",
+        "park",
+        "சினிமா",
+        "படம்",
+        "விளையாட்டு"
+    ]
+
+};
+
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+function detectCategory(
+    text
+){
+
+    const value =
+        String(
+            text || ""
+        ).toLowerCase();
+
+
+    if(
+        value.includes("petrol") ||
+        value.includes("diesel") ||
+        value.includes("fuel") ||
+        value.includes("பெட்ரோல்") ||
+        value.includes("டீசல்")
+    ){
+
+        return "Petrol";
+
+    }
+
+
+    if(
+        value.includes("tea") ||
+        value.includes("coffee") ||
+        value.includes("lunch") ||
+        value.includes("dinner") ||
+        value.includes("breakfast") ||
+        value.includes("டீ") ||
+        value.includes("காபி")
+    ){
+
+        return "Food";
+
+    }
+
+
+    let best =
+        "Other";
+
+    let bestScore =
+        0;
+
+
+    Object.keys(
+        CATEGORY_KEYWORDS
+    ).forEach(
+        category => {
+
+            CATEGORY_KEYWORDS[
+                category
+            ].forEach(
+                keyword => {
+
+                    if(
+                        value.includes(
+                            keyword.toLowerCase()
+                        )
+                    ){
+
+                        const score =
+                            keyword.length >= 5
+                            ? 3
+                            : 2;
+
+
+                        if(
+                            score >
+                            bestScore
+                        ){
+
+                            bestScore =
+                                score;
+
+                            best =
+                                category;
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    return best;
+
+}
+
+
+/* =====================================================
+   CATEGORY ICON
+===================================================== */
+
+function categoryIcon(
+    category
+){
+
+    const icons = {
+
+        Grocery:"🥬",
+
+        Petrol:"⛽",
+
+        Travel:"🚌",
+
+        Food:"☕",
+
+        Health:"💊",
+
+        Shopping:"🛍️",
+
+        Home:"🏠",
+
+        Bills:"🧾",
+
+        Entertainment:"🎬",
+
+        Other:"💰"
+
+    };
+
+
+    return (
+        icons[category] ||
+        "💰"
+    );
+
+}
+
+
+/* =====================================================
+   AMOUNTS
+===================================================== */
+
+function extractAllAmounts(
+    text
+){
+
+    const source =
+        String(
+            text || ""
+        );
+
+
+    const regex =
+        /(?:₹|rs\.?|inr)?\s*\d+(?:,\d{3})*(?:\.\d{1,2})?/gi;
+
+
+    const matches = [];
+
+    let match;
+
+
+    while(
+        (
+            match =
+            regex.exec(
+                source
+            )
+        ) !== null
+    ){
+
+        const raw =
+            match[0];
+
+
+        const numeric =
+            raw
+            .replace(
+                /₹/g,
+                ""
+            )
+            .replace(
+                /rs\.?/gi,
+                ""
+            )
+            .replace(
+                /inr/gi,
+                ""
+            )
+            .replace(
+                /,/g,
+                ""
+            )
+            .trim();
+
+
+        const amount =
+            Number(
+                numeric
+            );
+
+
+        if(
+            Number.isFinite(amount) &&
+            amount > 0
+        ){
+
+            matches.push({
+
+                amount,
+
+                start:
+                    match.index,
+
+                end:
+                    match.index +
+                    raw.length
+
+            });
+
+        }
+
+    }
+
+
+    return matches;
+
+}
+
+
+/* =====================================================
+   CLEAN DESCRIPTION
+===================================================== */
+
+function cleanDescription(
+    text
+){
+
+    let value =
+        String(
+            text || ""
+        );
+
+
+    value =
+        value.replace(
+            /(?:₹|rs\.?|inr)?\s*\d+(?:,\d{3})*(?:\.\d{1,2})?/gi,
+            " "
+        );
+
+
+    value =
+        value.replace(
+            /[,\-]+/g,
+            " "
+        );
+
+
+    value =
+        value.replace(
+            /\s+/g,
+            " "
+        )
+        .trim();
+
+
+    value =
+        value.replace(
+            /^(today|innaiku|today\s+na|for|ku|kku|la|at|spent|spend)\s+/i,
+            ""
+        );
+
+
+    value =
+        value.replace(
+            /\s+(ku|kku|la|at|for)$/i,
+            ""
+        );
+
+
+    return (
+        value ||
+        "Expense"
+    );
+
+}
+
+  /* =====================================================
+   MULTI EXPENSE PARSER
+===================================================== */
+
+function parseMultipleExpenses(
+    text
+){
+
+    const source =
+        String(
+            text || ""
+        ).trim();
+
+
+    if(!source){
+
+        return [];
+
+    }
+
+
+    const amounts =
+        extractAllAmounts(
+            source
+        );
+
+
+    if(
+        amounts.length === 0
+    ){
+
+        return [];
+
+    }
+
+
+    const items = [];
+
+
+    amounts.forEach(
+        (
+            amountItem,
+            index
+        ) => {
+
+
+            let segmentStart =
+                0;
+
+
+            if(
+                index > 0
+            ){
+
+                segmentStart =
+                    amounts[
+                        index - 1
+                    ].end;
+
+            }
+
+
+            const segmentEnd =
+                amountItem.end;
+
+
+            const segment =
+                source.slice(
+                    segmentStart,
+                    segmentEnd
+                ).trim();
+
+
+            items.push({
+
+                amount:
+                    amountItem.amount,
+
+                category:
+                    detectCategory(
+                        segment
+                    ),
+
+                description:
+                    cleanDescription(
+                        segment
+                    ),
+
+                expense_date:
+                    getToday()
+
+            });
+
+        }
+    );
+
+
+    /*
+       One amount means the whole
+       sentence should be considered.
+    */
+
+    if(
+        items.length === 1
+    ){
+
+        items[0].description =
+            cleanDescription(
+                source
+            );
+
+
+        items[0].category =
+            detectCategory(
+                source
+            );
+
+    }
+
+
+    return items;
+
+}
+
+
+/* =====================================================
+   SAVE MULTIPLE
+===================================================== */
+
+async function saveMultipleExpenses(
+    items
+){
+
+    if(
+        !currentUser
+    ){
+
+        return {
+
+            success:false,
+
+            error:
+                "Login session missing."
+
+        };
+
+    }
+
+
+    if(
+        !Array.isArray(items) ||
+        items.length === 0
+    ){
+
+        return {
+
+            success:false,
+
+            error:
+                "No expense found."
+
+        };
+
+    }
+
+
+    const rows =
+        items.map(
+            item => ({
+
+                user_id:
+                    currentUser.id,
+
+                expense_date:
+                    item.expense_date ||
+                    getToday(),
+
+                category:
+                    item.category ||
+                    "Other",
+
+                description:
+                    item.description ||
+                    "Expense",
+
+                amount:
+                    Number(
+                        item.amount
+                    ),
+
+                source:
+                    "chat"
+
+            })
+        );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from(
+            "daily_expenses"
+        )
+        .insert(
+            rows
+        )
+        .select();
+
+
+    if(error){
+
+        console.error(
+            "Expense insert error:",
+            error
+        );
+
+
+        return {
+
+            success:false,
+
+            error:
+                error.message ||
+                "Expense save failed."
+
+        };
+
+    }
+
+
+    return {
+
+        success:true,
+
+        data:
+            data || [],
+
+        count:
+            rows.length
+
+    };
+
+}
+
+
+/* =====================================================
+   TIME
+===================================================== */
+
+function getChatTime(){
+
+    return new Date()
+        .toLocaleTimeString(
+            "en-IN",
+            {
+                hour:"numeric",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+
+/* =====================================================
+   ADD USER MESSAGE
+===================================================== */
+
+function addUserMessage(
+    text
+){
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "user-row";
+
+
+    row.innerHTML = `
+
+        <div class="user-bubble">
+
+            ${escapeHtml(text)}
+
+            <div class="user-time">
+
+                ${getChatTime()}
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    chatMessages.appendChild(
+        row
+    );
+
+
+    scrollChat();
+
+}
+
+
+/* =====================================================
+   ADD BOT MESSAGE
+===================================================== */
+
+function addBotMessage(
+    text
+){
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "bot-row";
+
+
+    row.innerHTML = `
+
+        <div class="small-bot">
+
+            <div class="small-bot-face"></div>
+
+        </div>
+
+
+        <div class="bot-bubble">
+
+            ${escapeHtml(text)}
+
+            <div class="bot-time">
+
+                ${getChatTime()}
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    chatMessages.appendChild(
+        row
+    );
+
+
+    scrollChat();
+
+}
+
+
+/* =====================================================
+   TYPING
+===================================================== */
+
+function showTyping(){
+
+    removeTyping();
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.id =
+        "typingMessage";
+
+
+    row.className =
+        "bot-row";
+
+
+    row.innerHTML = `
+
+        <div class="small-bot">
+
+            <div class="small-bot-face"></div>
+
+        </div>
+
+
+        <div class="bot-bubble">
+
+            <div class="typing">
+
+                <span></span>
+
+                <span></span>
+
+                <span></span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    chatMessages.appendChild(
+        row
+    );
+
+
+    scrollChat();
+
+}
+
+
+function removeTyping(){
+
+    const element =
+        document.getElementById(
+            "typingMessage"
+        );
+
+
+    if(element){
+
+        element.remove();
+
+    }
+
+}
+
+
+/* =====================================================
+   RESULT MESSAGE
+===================================================== */
+
+function addResultMessage(
+    items
+){
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "bot-row";
+
+
+    let total =
+        0;
+
+
+    let html =
+        "";
+
+
+    items.forEach(
+        item => {
+
+            total +=
+                Number(
+                    item.amount
+                ) || 0;
+
+
+            html += `
+
+                <div class="result-item">
+
+                    <span class="result-name">
+
+                        ${categoryIcon(
+                            item.category
+                        )}
+
+                        ${escapeHtml(
+                            item.description
+                        )}
+
+                    </span>
+
+                    <span class="result-amount">
+
+                        ${formatRupee(
+                            item.amount
+                        )}
+
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    row.innerHTML = `
+
+        <div class="small-bot">
+
+            <div class="small-bot-face"></div>
+
+        </div>
+
+
+        <div class="result-bubble">
+
+            <div class="result-title">
+                Got it! 👍
+            </div>
+
+
+            ${html}
+
+
+            <div class="result-total">
+
+                <span>
+                    Total
+                </span>
+
+                <span>
+                    ${formatRupee(total)}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    chatMessages.appendChild(
+        row
+    );
+
+
+    scrollChat();
+
+}
+
+
+/* =====================================================
+   SCROLL CHAT
+===================================================== */
+
+function scrollChat(){
+
+    setTimeout(
+        function(){
+
+            window.scrollTo({
+
+                top:
+                    document.body.scrollHeight,
+
+                behavior:
+                    "smooth"
+
+            });
+
+        },
+        50
+    );
+
+  }
+
+  /* =====================================================
+   LOAD TODAY
+===================================================== */
+
+async function loadTodayExpenses(){
+
+    if(
+        !currentUser
+    ){
+
+        return;
+
+    }
+
+
+    entriesList.innerHTML = `
+
+        <div class="loading-box">
+
+            Loading your expenses...
+
+        </div>
+
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from(
+            "daily_expenses"
+        )
+        .select(
+            "id,expense_date,category,description,amount,created_at"
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .eq(
+            "expense_date",
+            getToday()
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(error){
+
+        console.error(
+            "Load expenses error:",
+            error
+        );
+
+
+        showError(
+            "Today's expenses load panna mudiyala."
+        );
+
+
+        entriesList.innerHTML = `
+
+            <div class="empty-box">
+
+                Unable to load expenses.
+
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    hideError();
+
+
+    const expenses =
+        data || [];
+
+
+    const countText =
+        expenses.length +
+        (
+            expenses.length === 1
+            ? " entry"
+            : " entries"
+        );
+
+
+    entriesCount.textContent =
+        countText;
+
+
+    renderEntries(
+        expenses
+    );
+
+}
+
+
+/* =====================================================
+   RENDER ENTRIES
+===================================================== */
+
+function renderEntries(
+    expenses
+){
+
+    if(
+        !expenses ||
+        expenses.length === 0
+    ){
+
+        entriesList.innerHTML = `
+
+            <div class="empty-box">
+
+                No expenses added today yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    entriesList.innerHTML =
+        "";
+
+
+    expenses.forEach(
+        expense => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "expense-card";
+
+
+            item.innerHTML = `
+
+                <div class="expense-left">
+
+
+                    <div class="category-icon">
+
+                        ${categoryIcon(
+                            expense.category
+                        )}
+
+                    </div>
+
+
+                    <div class="expense-info">
+
+                        <div class="expense-category">
+
+                            ${escapeHtml(
+                                expense.category ||
+                                "Other"
+                            )}
+
+                        </div>
+
+
+                        <div class="expense-description">
+
+                            ${escapeHtml(
+                                expense.description ||
+                                "Expense"
+                            )}
+
+                        </div>
+
+
+                        <div class="expense-date">
+
+                            ${formatDate(
+                                expense.expense_date
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="expense-right">
+
+                    <div class="expense-amount">
+
+                        ${formatRupee(
+                            expense.amount
+                        )}
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="action-button"
+                        onclick="openEdit('${expense.id}')"
+                        aria-label="Edit"
+                    >
+                        ✏️
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="action-button delete"
+                        onclick="deleteExpense('${expense.id}')"
+                        aria-label="Delete"
+                    >
+                        🗑️
+                    </button>
+
+                </div>
+
+            `;
+
+
+            entriesList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   EDIT
+===================================================== */
+
+async function openEdit(
+    id
+){
+
+    if(
+        !currentUser
+    ){
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from(
+            "daily_expenses"
+        )
+        .select(
+            "id,description,amount,category,expense_date"
+        )
+        .eq(
+            "id",
+            id
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .single();
+
+
+    if(error){
+
+        console.error(
+            "Edit load error:",
+            error
+        );
+
+
+        showError(
+            "Expense details load panna mudiyala."
+        );
+
+
+        return;
+
+    }
+
+
+    editingExpenseId =
+        data.id;
+
+
+    editDescription.value =
+        data.description || "";
+
+
+    editAmount.value =
+        data.amount || "";
+
+
+    editCategory.value =
+        data.category || "Other";
+
+
+    editDate.value =
+        data.expense_date ||
+        getToday();
+
+
+    editModal.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE EDIT
+===================================================== */
+
+function closeEdit(){
+
+    editingExpenseId =
+        null;
+
+
+    editModal.classList.remove(
+        "show"
+    );
+
+}
+
+
+cancelEdit.addEventListener(
+    "click",
+    closeEdit
+);
+
+
+editModal.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target ===
+            editModal
+        ){
+
+            closeEdit();
+
+        }
+
+    }
+);
+
+  /* =====================================================
+   SAVE EDIT
+===================================================== */
+
+saveEdit.addEventListener(
+    "click",
+    async function(){
+
+        if(
+            !editingExpenseId ||
+            !currentUser
+        ){
+
+            return;
+
+        }
+
+
+        const description =
+            editDescription.value.trim();
+
+
+        const amount =
+            Number(
+                editAmount.value
+            );
+
+
+        const category =
+            editCategory.value;
+
+
+        const expenseDate =
+            editDate.value;
+
+
+        if(
+            !description
+        ){
+
+            alert(
+                "Description enter pannunga."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            !Number.isFinite(amount) ||
+            amount <= 0
+        ){
+
+            alert(
+                "Valid amount enter pannunga."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            !expenseDate
+        ){
+
+            alert(
+                "Expense date select pannunga."
+            );
+
+            return;
+
+        }
+
+
+        saveEdit.disabled =
+            true;
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+            .from(
+                "daily_expenses"
+            )
+            .update({
+
+                description:
+                    description,
+
+                amount:
+                    amount,
+
+                category:
+                    category,
+
+                expense_date:
+                    expenseDate
+
+            })
+            .eq(
+                "id",
+                editingExpenseId
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+        saveEdit.disabled =
+            false;
+
+
+        if(error){
+
+            console.error(
+                "Update error:",
+                error
+            );
+
+
+            alert(
+                "Expense update panna mudiyala."
+            );
+
+
+            return;
+
+        }
+
+
+        closeEdit();
+
+
+        await loadTodayExpenses();
+
+    }
+);
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+async function deleteExpense(
+    id
+){
+
+    if(
+        !currentUser
+    ){
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Indha expense delete pannalama?"
+        );
+
+
+    if(
+        !confirmed
+    ){
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+        .from(
+            "daily_expenses"
+        )
+        .delete()
+        .eq(
+            "id",
+            id
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        );
+
+
+    if(error){
+
+        console.error(
+            "Delete error:",
+            error
+        );
+
+
+        alert(
+            "Expense delete panna mudiyala."
+        );
+
+
+        return;
+
+    }
+
+
+    await loadTodayExpenses();
+
+}
+
+
+/* =====================================================
+   TODAY TOTAL
+===================================================== */
+
+async function showTodayTotal(){
+
+    if(
+        !currentUser
+    ){
+
+        return;
+
+    }
+
+
+    showTyping();
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                250
+            )
+    );
+
+
+    removeTyping();
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from(
+            "daily_expenses"
+        )
+        .select(
+            "amount"
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .eq(
+            "expense_date",
+            getToday()
+        );
+
+
+    if(error){
+
+        addBotMessage(
+            "Today's total check panna mudiyala."
+        );
+
+
+        return;
+
+    }
+
+
+    let total =
+        0;
+
+
+    (
+        data || []
+    ).forEach(
+        item => {
+
+            total +=
+                Number(
+                    item.amount
+                ) || 0;
+
+        }
+    );
+
+
+    addBotMessage(
+
+        "Today neenga " +
+        formatRupee(total) +
+        " spend pannirukeenga. 💰"
+
+    );
+
+}
+
+
+/* =====================================================
+   BUILD SAVE RESPONSE
+===================================================== */
+
+function buildSavedResponse(
+    items
+){
+
+    if(
+        items.length === 1
+    ){
+
+        return (
+            "Done 👍 " +
+            items[0].description +
+            " " +
+            formatRupee(
+                items[0].amount
+            ) +
+            " added."
+        );
+
+    }
+
+
+    let total =
+        0;
+
+
+    items.forEach(
+        item => {
+
+            total +=
+                Number(
+                    item.amount
+                ) || 0;
+
+        }
+    );
+
+
+    return (
+        "Done 👍 " +
+        items.length +
+        " expenses added. Total " +
+        formatRupee(total) +
+        "."
+    );
+
+}
+
+
+/* =====================================================
+   PROCESS MESSAGE
+===================================================== */
+
+async function processMessage(){
+
+    const text =
+        input.value.trim();
+
+
+    if(
+        !text ||
+        sendBtn.disabled
+    ){
+
+        return;
+
+    }
+
+
+    addUserMessage(
+        text
+    );
+
+
+    input.value =
+        "";
+
+
+    const lower =
+        text.toLowerCase();
+
+
+    /* TOTAL QUESTION */
+
+    if(
+
+        lower.includes(
+            "today total"
+        ) ||
+
+        lower.includes(
+            "total expense"
+        ) ||
+
+        lower.includes(
+            "today expense"
+        ) ||
+
+        lower.includes(
+            "how much"
+        ) ||
+
+        lower.includes(
+            "evlo spend"
+        ) ||
+
+        lower.includes(
+            "evlo selavu"
+        ) ||
+
+        lower.includes(
+            "innaiku evlo"
+        ) ||
+
+        lower.includes(
+            "இன்று எவ்வளவு"
+        )
+
+    ){
+
+        await showTodayTotal();
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    /* PARSE */
+
+    const items =
+        parseMultipleExpenses(
+            text
+        );
+
+
+    if(
+        !items ||
+        items.length === 0
+    ){
+
+        addBotMessage(
+            "Amount puriyala 🙂 Example: Tea 50 Petrol 200."
+        );
+
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    sendBtn.disabled =
+        true;
+
+
+    showTyping();
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                300
+            )
+    );
+
+
+    removeTyping();
+
+
+    const result =
+        await saveMultipleExpenses(
+            items
+        );
+
+
+    if(
+        result.success
+    ){
+
+        addResultMessage(
+            items
+        );
+
+
+        await loadTodayExpenses();
+
+    }
+    else{
+
+        showError(
+            result.error ||
+            "Expense save failed."
+        );
+
+
+        addBotMessage(
+            "Expense save panna mudiyala. Please try again."
+        );
+
+    }
+
+
+    sendBtn.disabled =
+        false;
+
+
+    input.focus();
+
+}
+
+  /* =====================================================
+   SEND BUTTON
+===================================================== */
+
+sendBtn.addEventListener(
+    "click",
+    processMessage
+);
+
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+input.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Enter"
+        ){
+
+            event.preventDefault();
+
+            processMessage();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ESCAPE = CLOSE MODAL
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeEdit();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+(async function(){
+
+    try{
+
+        hideError();
+
+
+        const user =
+            await checkSession();
+
+
+        if(
+            !user
+        ){
+
+            return;
+
+        }
+
+
+        await loadUserName();
+
+
+        await loadTodayExpenses();
+
+
+        input.focus();
+
+    }
+    catch(error){
+
+        console.error(
+            "Page initialization error:",
+            error
+        );
+
+
+        showError(
+            "Page load panna mudiyala. Please refresh."
+        );
+
+    }
+
+})();
+
+
+</script>
+
+</body>
+
+</html>

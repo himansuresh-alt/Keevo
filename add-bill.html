@@ -1,0 +1,3820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>Save a Bill</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+/* =========================================
+   RESET
+========================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:#f7f7f6;
+
+    color:#171717;
+
+    min-height:100vh;
+
+    padding-bottom:110px;
+
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+
+/* =========================================
+   MASTER HEADER
+========================================= */
+
+.top-header{
+
+    width:100%;
+
+    max-width:620px;
+
+    height:245px;
+
+    margin:0 auto;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:0;
+
+    background:
+
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(255,255,255,.95) 0%,
+            rgba(255,255,255,.35) 18%,
+            transparent 40%
+        ),
+
+        linear-gradient(
+            135deg,
+            #ff6b35 0%,
+            #ff7040 42%,
+            #ff9a6f 100%
+        );
+
+    border-radius:
+        0 0 34px 34px;
+
+    box-shadow:
+        0 18px 38px
+        rgba(255,107,53,.18);
+
+    perspective:1000px;
+
+    isolation:isolate;
+}
+
+
+.top-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    right:-90px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.18);
+
+    filter:blur(1px);
+
+    animation:
+        headerFloat 6s ease-in-out infinite;
+}
+
+
+.top-header::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    left:-80px;
+    bottom:-105px;
+
+    border-radius:50%;
+
+    background:
+        rgba(190,65,25,.12);
+
+    animation:
+        headerFloat2 7s ease-in-out infinite;
+}
+
+
+/* =========================================
+   BACK
+========================================= */
+
+.header-back{
+
+    position:absolute;
+
+    left:26px;
+    top:26px;
+
+    width:60px;
+    height:60px;
+
+    border-radius:20px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.32);
+
+    background:
+        rgba(255,255,255,.10);
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    font-size:34px;
+
+    font-weight:300;
+
+    line-height:1;
+
+    z-index:10;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+}
+
+
+/* =========================================
+   HEADER CARDS
+========================================= */
+
+.header-bill-card{
+
+    position:absolute;
+
+    width:255px;
+    height:175px;
+
+    right:-45px;
+    top:38px;
+
+    border-radius:30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.23),
+            rgba(255,255,255,.07)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.26);
+
+    transform:
+        rotate(-10deg)
+        translateZ(20px);
+
+    box-shadow:
+        0 22px 45px
+        rgba(150,50,20,.10),
+
+        inset
+        0 1px 0
+        rgba(255,255,255,.30);
+
+    z-index:1;
+}
+
+
+.header-mini-card{
+
+    position:absolute;
+
+    width:105px;
+    height:72px;
+
+    right:34px;
+    top:117px;
+
+    border-radius:19px;
+
+    background:
+        rgba(255,255,255,.18);
+
+    border:
+        1px solid
+        rgba(255,255,255,.30);
+
+    transform:
+        rotate(7deg);
+
+    box-shadow:
+        0 15px 25px
+        rgba(130,45,20,.08);
+
+    z-index:2;
+}
+
+
+/* =========================================
+   PROFILE INITIAL
+========================================= */
+
+.profile-mini{
+
+    position:absolute;
+
+    right:18px;
+    top:17px;
+
+    width:60px;
+    height:60px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.16);
+
+    border:
+        1px solid
+        rgba(255,255,255,.30);
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:18px;
+
+    font-weight:800;
+
+    z-index:8;
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+}
+
+
+/* =========================================
+   HEADER CONTENT
+========================================= */
+
+.header-content{
+
+    position:absolute;
+
+    left:24px;
+    right:24px;
+
+    bottom:27px;
+
+    z-index:5;
+}
+
+
+.header-eyebrow{
+
+    color:
+        rgba(255,255,255,.90);
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:1.8px;
+
+    margin-bottom:8px;
+}
+
+
+.header-title-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    flex-wrap:wrap;
+}
+
+
+.header-main-title{
+
+    color:#fff;
+
+    font-size:31px;
+
+    line-height:1;
+
+    font-weight:850;
+
+    letter-spacing:-1.1px;
+}
+
+
+.header-count{
+
+    min-width:58px;
+
+    height:30px;
+
+    padding:0 13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,.35);
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+.header-subtitle{
+
+    margin-top:9px;
+
+    max-width:340px;
+
+    color:
+        rgba(255,255,255,.94);
+
+    font-size:12px;
+
+    line-height:1.45;
+
+    font-weight:500;
+}
+
+
+/* =========================================
+   HEADER ANIMATION
+========================================= */
+
+@keyframes headerFloat{
+
+    0%,
+    100%{
+
+        transform:
+            translate3d(0,0,0)
+            scale(1);
+
+    }
+
+    50%{
+
+        transform:
+            translate3d(-10px,8px,0)
+            scale(1.04);
+
+    }
+}
+
+
+@keyframes headerFloat2{
+
+    0%,
+    100%{
+
+        transform:
+            translate3d(0,0,0);
+
+    }
+
+    50%{
+
+        transform:
+            translate3d(8px,-8px,0);
+
+    }
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.page{
+
+    width:100%;
+
+    max-width:620px;
+
+    margin:0 auto;
+
+    padding:
+        22px 18px 35px;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.hero{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #fff4ec 0%,
+            #fff8f3 55%,
+            #fff0e6 100%
+        );
+
+    border-radius:28px;
+
+    padding:
+        26px 22px 25px;
+
+    margin-bottom:18px;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    right:-55px;
+    top:-55px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.65);
+}
+
+
+.hero-small{
+
+    color:#777;
+
+    font-size:13px;
+
+    margin-bottom:7px;
+
+    position:relative;
+
+    z-index:2;
+}
+
+
+.hero h1{
+
+    font-size:29px;
+
+    line-height:1.12;
+
+    letter-spacing:-1px;
+
+    font-weight:850;
+
+    position:relative;
+
+    z-index:2;
+
+    margin-bottom:8px;
+}
+
+
+.hero p{
+
+    color:#666;
+
+    font-size:14px;
+
+    line-height:1.55;
+
+    max-width:430px;
+
+    position:relative;
+
+    z-index:2;
+}
+
+  /* =========================================
+   UPLOAD CARD
+========================================= */
+
+.upload-card{
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:24px 20px;
+
+    box-shadow:
+        0 7px 25px
+        rgba(0,0,0,.045);
+
+    border:
+        1px solid #eeeeee;
+
+    margin-bottom:18px;
+}
+
+
+.upload-card-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    margin-bottom:20px;
+}
+
+
+.upload-symbol{
+
+    width:58px;
+    height:58px;
+
+    border-radius:19px;
+
+    background:#fff0e9;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:29px;
+
+    flex-shrink:0;
+}
+
+
+.upload-heading h2{
+
+    font-size:19px;
+
+    font-weight:800;
+
+    margin-bottom:4px;
+}
+
+
+.upload-heading p{
+
+    color:#888;
+
+    font-size:12px;
+
+    line-height:1.4;
+}
+
+
+/* =========================================
+   UPLOAD BUTTONS
+========================================= */
+
+.upload-actions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:11px;
+}
+
+
+.upload-action{
+
+    min-height:54px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:750;
+
+    transition:.2s;
+
+    text-decoration:none;
+}
+
+
+.upload-action.primary{
+
+    background:#ff5a2f;
+
+    color:#fff;
+
+    box-shadow:
+        0 7px 17px
+        rgba(255,90,47,.18);
+}
+
+
+.upload-action.secondary{
+
+    background:#fff;
+
+    color:#222;
+
+    border:
+        1px solid #ddd;
+}
+
+
+.upload-action:active{
+
+    transform:
+        scale(.98);
+}
+
+
+#billFile{
+
+    display:none;
+}
+
+
+/* =========================================
+   SELECTED FILE
+========================================= */
+
+.file-selected{
+
+    display:none;
+
+    margin-top:14px;
+
+    background:#fff6f1;
+
+    border-radius:13px;
+
+    padding:12px 13px;
+
+    color:#e84c27;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    word-break:break-word;
+}
+
+
+/* =========================================
+   PREVIEW
+========================================= */
+
+.file-preview{
+
+    display:none;
+
+    margin-top:12px;
+
+    width:100%;
+
+    background:#f8f8f8;
+
+    border-radius:16px;
+
+    padding:10px;
+
+    overflow:hidden;
+
+    border:
+        1px solid #eeeeee;
+}
+
+
+.file-preview img{
+
+    display:block;
+
+    width:100%;
+
+    max-height:360px;
+
+    object-fit:contain;
+
+    border-radius:11px;
+
+    background:#fff;
+}
+
+
+.file-preview iframe{
+
+    display:block;
+
+    width:100%;
+
+    height:420px;
+
+    border:0;
+
+    border-radius:11px;
+
+    background:#fff;
+}
+
+
+/* =========================================
+   COMPRESSION INFO
+========================================= */
+
+.compression-info{
+
+    display:none;
+
+    margin-top:8px;
+
+    color:#777;
+
+    font-size:10px;
+
+    line-height:1.4;
+}
+
+
+/* =========================================
+   DETAILS CARD
+========================================= */
+
+.details-card{
+
+    background:#fff;
+
+    border-radius:25px;
+
+    padding:22px 20px;
+
+    border:
+        1px solid #eeeeee;
+
+    box-shadow:
+        0 7px 25px
+        rgba(0,0,0,.04);
+}
+
+
+.details-title{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    margin-bottom:20px;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.field{
+
+    margin-bottom:17px;
+}
+
+
+.field label{
+
+    display:block;
+
+    font-size:13px;
+
+    font-weight:750;
+
+    margin-bottom:7px;
+
+    color:#303030;
+}
+
+
+.optional{
+
+    color:#999;
+
+    font-size:11px;
+
+    font-weight:500;
+}
+
+
+.required{
+
+    color:#ff5a2f;
+}
+
+
+.field input,
+.field select{
+
+    width:100%;
+
+    height:50px;
+
+    border:
+        1px solid #dedede;
+
+    border-radius:14px;
+
+    background:#fff;
+
+    padding:0 14px;
+
+    outline:none;
+
+    color:#202020;
+
+    font-size:14px;
+
+    transition:.2s;
+}
+
+
+.field input:focus,
+.field select:focus{
+
+    border-color:#ff6a42;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,90,47,.08);
+}
+
+
+.field-help{
+
+    color:#929292;
+
+    font-size:11px;
+
+    line-height:1.4;
+
+    margin-top:6px;
+}
+
+
+/* =========================================
+   STORAGE NOTE
+========================================= */
+
+.storage-note{
+
+    background:#f6f7f8;
+
+    border-radius:15px;
+
+    padding:14px;
+
+    margin-top:3px;
+
+    margin-bottom:18px;
+
+    color:#666;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+.storage-note strong{
+
+    color:#333;
+}
+
+
+/* =========================================
+   SAVE BUTTON
+========================================= */
+
+.save-btn{
+
+    width:100%;
+
+    height:54px;
+
+    border:0;
+
+    border-radius:16px;
+
+    background:#ff5a2f;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 9px 20px
+        rgba(255,90,47,.18);
+
+    transition:.2s;
+}
+
+
+.save-btn:active{
+
+    transform:
+        scale(.985);
+}
+
+
+.save-btn:disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.message{
+
+    display:none;
+
+    margin-top:13px;
+
+    padding:12px 13px;
+
+    border-radius:13px;
+
+    font-size:12px;
+
+    line-height:1.45;
+
+    word-break:break-word;
+}
+
+
+.message.success{
+
+    display:block;
+
+    background:#edf9f0;
+
+    color:#26733a;
+}
+
+
+.message.error{
+
+    display:block;
+
+    background:#fff0f0;
+
+    color:#c62828;
+}
+
+
+.loading-text{
+
+    display:none;
+
+    text-align:center;
+
+    color:#888;
+
+    font-size:11px;
+
+    margin-top:9px;
+}
+
+
+/* =========================================
+   BOTTOM NAV
+========================================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:14px;
+    right:14px;
+
+    bottom:12px;
+
+    height:70px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f3f3f3
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.95);
+
+    border-radius:26px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-around;
+
+    padding:5px 5px 6px;
+
+    box-shadow:
+
+        0 14px 35px
+        rgba(0,0,0,.12),
+
+        0 4px 10px
+        rgba(0,0,0,.06),
+
+        inset
+        0 1px 0
+        rgba(255,255,255,.95),
+
+        inset
+        0 -2px 5px
+        rgba(0,0,0,.035);
+
+    z-index:1000;
+}
+
+
+.nav-item{
+
+    width:20%;
+
+    height:58px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:3px;
+
+    text-decoration:none;
+
+    color:#888;
+
+    font-size:10px;
+
+    font-weight:600;
+
+    border-radius:18px;
+
+    transition:
+        transform .18s ease,
+        color .18s ease;
+}
+
+
+.nav-item.active:not(.nav-add){
+
+    color:#FF6B35;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff7f2,
+            #ffffff
+        );
+
+    box-shadow:
+
+        inset
+        0 2px 4px
+        rgba(255,107,53,.08),
+
+        0 3px 8px
+        rgba(0,0,0,.04);
+}
+
+
+/* ADD BUTTON MUST NOT GET ACTIVE PILL */
+
+.nav-add{
+
+    background:transparent !important;
+
+    box-shadow:none !important;
+
+    border-radius:0;
+
+    overflow:visible;
+
+}
+
+
+.nav-add.active{
+
+    background:transparent !important;
+
+    box-shadow:none !important;
+
+}
+
+
+.nav-icon{
+
+    width:25px;
+    height:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+
+.nav-icon svg{
+
+    width:20px;
+    height:20px;
+
+    fill:none;
+
+    stroke:currentColor;
+
+    stroke-width:2;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+}
+
+
+.nav-add{
+
+    position:relative;
+
+    margin-top:-27px;
+
+    height:70px;
+
+    z-index:5;
+}
+
+
+.nav-add-circle{
+
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#fff;
+
+    font-size:30px;
+
+    font-weight:300;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #ff7040,
+            #f4511e
+        );
+
+    border:
+        4px solid #fff;
+
+    box-shadow:
+
+        0 10px 18px
+        rgba(255,107,53,.30),
+
+        0 4px 8px
+        rgba(0,0,0,.12),
+
+        inset
+        0 2px 2px
+        rgba(255,255,255,.35),
+
+        inset
+        0 -4px 5px
+        rgba(180,50,10,.18);
+}
+
+
+.nav-add-label{
+
+    margin-top:3px;
+
+    color:#777;
+
+    font-size:10px;
+
+    font-weight:600;
+}
+
+  .nav-item:active{
+
+    transform:
+        translateY(2px)
+        scale(.96);
+}
+
+
+.nav-add:active
+.nav-add-circle{
+
+    transform:
+        translateY(3px)
+        scale(.94);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:480px){
+
+    .top-header{
+
+        height:225px;
+
+        border-radius:
+            0 0 30px 30px;
+    }
+
+
+    .header-back{
+
+        left:18px;
+        top:18px;
+
+        width:42px;
+        height:42px;
+
+        border-radius:16px;
+
+        font-size:29px;
+    }
+
+
+    .profile-mini{
+
+        right:17px;
+        top:17px;
+
+        width:42px;
+        height:42px;
+
+        font-size:16px;
+    }
+
+
+    .header-content{
+
+        left:22px;
+        right:22px;
+
+        bottom:25px;
+    }
+
+
+    .header-main-title{
+
+        font-size:29px;
+    }
+
+
+    .header-subtitle{
+
+        font-size:11.5px;
+    }
+
+
+    .header-bill-card{
+
+        width:225px;
+
+        height:155px;
+
+        right:-50px;
+
+        top:37px;
+    }
+
+
+    .header-mini-card{
+
+        right:25px;
+
+        top:112px;
+    }
+
+
+    .page{
+
+        padding:
+            18px 14px 35px;
+    }
+
+
+    .hero{
+
+        border-radius:25px;
+
+        padding:
+            23px 19px 23px;
+    }
+
+
+    .hero h1{
+
+        font-size:27px;
+    }
+
+
+    .upload-card,
+    .details-card{
+
+        border-radius:23px;
+    }
+
+
+    .bottom-nav{
+
+        left:12px;
+
+        right:12px;
+
+        bottom:10px;
+
+        height:70px;
+
+        border-radius:25px;
+    }
+
+}
+
+
+@media(max-width:360px){
+
+    .top-header{
+
+        height:215px;
+    }
+
+
+    .header-bill-card{
+
+        width:205px;
+
+        height:142px;
+
+        right:-55px;
+    }
+
+
+    .header-mini-card{
+
+        right:20px;
+
+        top:106px;
+    }
+
+
+    .header-content{
+
+        left:19px;
+
+        right:19px;
+
+        bottom:22px;
+    }
+
+
+    .header-main-title{
+
+        font-size:27px;
+    }
+
+
+    .bottom-nav{
+
+        left:9px;
+
+        right:9px;
+    }
+
+
+    .nav-item{
+
+        font-size:9px;
+    }
+
+
+    .nav-add-circle{
+
+        width:54px;
+
+        height:54px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================================
+     MASTER HEADER
+========================================= -->
+
+<header class="top-header">
+
+
+    <a
+        href="my-bills.html"
+        class="header-back"
+        aria-label="Back"
+    >
+        ‹
+    </a>
+
+
+    <div class="header-bill-card"></div>
+
+
+    <div class="header-mini-card"></div>
+
+
+    <div
+        class="profile-mini"
+        id="profileInitial"
+    >
+        S
+    </div>
+
+
+    <div class="header-content">
+
+
+        <div class="header-eyebrow">
+
+            YOUR PERSONAL SPACE
+
+        </div>
+
+
+        <div class="header-title-row">
+
+
+            <h1 class="header-main-title">
+
+                Save a Bill
+
+            </h1>
+
+
+            <span class="header-count">
+
+                Add Bill
+
+            </span>
+
+
+        </div>
+
+
+        <div class="header-subtitle">
+
+            Upload and keep your bill safely in one place.
+
+        </div>
+
+
+    </div>
+
+
+</header>
+
+
+<main class="page">
+
+
+<!-- =========================================
+     INTRO
+========================================= -->
+
+<section class="hero">
+
+
+    <div class="hero-small">
+
+        Keep it saved.
+
+    </div>
+
+
+    <h1>
+
+        Save a Bill 🧾
+
+    </h1>
+
+
+    <p>
+
+        Upload your bill and keep it safely stored
+        for whenever you need it.
+
+    </p>
+
+
+</section>
+
+
+<!-- =========================================
+     UPLOAD CARD
+========================================= -->
+
+<section class="upload-card">
+
+
+    <div class="upload-card-top">
+
+
+        <div class="upload-symbol">
+
+            🧾
+
+        </div>
+
+
+        <div class="upload-heading">
+
+
+            <h2>
+
+                Add your bill
+
+            </h2>
+
+
+            <p>
+
+                Take a photo or choose a bill
+                from your phone.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+    <div class="upload-actions">
+
+
+        <label
+            for="billFile"
+            class="upload-action primary"
+        >
+
+            📷 Take / Choose
+
+        </label>
+
+
+        <label
+            for="billFile"
+            class="upload-action secondary"
+        >
+
+            🖼️ Gallery / PDF
+
+        </label>
+
+
+    </div>
+
+
+    <input
+        type="file"
+        id="billFile"
+        accept="image/*,.pdf"
+    >
+
+
+    <div
+        id="fileName"
+        class="file-selected"
+    ></div>
+
+
+    <div
+        id="filePreview"
+        class="file-preview"
+    ></div>
+
+
+    <div
+        id="compressionInfo"
+        class="compression-info"
+    ></div>
+
+
+</section>
+
+
+<!-- =========================================
+     DETAILS
+========================================= -->
+
+<section class="details-card">
+
+
+    <div class="details-title">
+
+        Bill details
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label for="billTitle">
+
+            Bill title
+
+            <span class="required">
+
+                *
+
+            </span>
+
+        </label>
+
+
+        <input
+            type="text"
+            id="billTitle"
+            placeholder="Example: Bike Tyre Purchase"
+            maxlength="100"
+            autocomplete="off"
+        >
+
+
+        <div class="field-help">
+
+            Give it a simple name so you can find it later.
+
+        </div>
+
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label for="shopName">
+
+            Shop / Business
+
+            <span class="optional">
+
+                Optional
+
+            </span>
+
+        </label>
+
+
+        <input
+            type="text"
+            id="shopName"
+            placeholder="Example: Reliance Smart"
+            autocomplete="off"
+        >
+
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label for="billDate">
+
+            Bill date
+
+            <span class="optional">
+
+                Optional
+
+            </span>
+
+        </label>
+
+
+        <input
+            type="date"
+            id="billDate"
+        >
+
+
+    </div>
+
+      <div class="field">
+
+
+        <label for="totalAmount">
+
+            Bill amount
+
+            <span class="optional">
+
+                Optional
+
+            </span>
+
+        </label>
+
+
+        <input
+            type="number"
+            id="totalAmount"
+            placeholder="Example: 1250"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+        >
+
+
+        <div class="field-help">
+
+            Stored as bill information only.
+            It will not become an expense.
+
+        </div>
+
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label for="category">
+
+            Category
+
+            <span class="optional">
+
+                Optional
+
+            </span>
+
+        </label>
+
+
+        <select id="category">
+
+
+            <option value="">
+
+                Select category
+
+            </option>
+
+
+            <option value="Grocery">
+
+                Grocery
+
+            </option>
+
+
+            <option value="Food">
+
+                Food
+
+            </option>
+
+
+            <option value="Shopping">
+
+                Shopping
+
+            </option>
+
+
+            <option value="Travel">
+
+                Travel
+
+            </option>
+
+
+            <option value="Medical">
+
+                Medical
+
+            </option>
+
+
+            <option value="Bills">
+
+                Bills
+
+            </option>
+
+
+            <option value="Electronics">
+
+                Electronics
+
+            </option>
+
+
+            <option value="Vehicle">
+
+                Vehicle
+
+            </option>
+
+
+            <option value="Home">
+
+                Home
+
+            </option>
+
+
+            <option value="Others">
+
+                Others
+
+            </option>
+
+
+        </select>
+
+
+    </div>
+
+
+    <div class="storage-note">
+
+        🔒
+
+        <strong>
+
+            Storage only.
+
+        </strong>
+
+        Your uploaded bill is saved for your records.
+        Saving a bill does not create an expense entry.
+
+    </div>
+
+
+    <button
+        type="button"
+        class="save-btn"
+        id="saveBtn"
+        onclick="saveBill()"
+    >
+
+        Save Bill
+
+    </button>
+
+
+    <div
+        id="loadingText"
+        class="loading-text"
+    >
+
+        Please wait...
+
+    </div>
+
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+</section>
+
+
+</main>
+
+
+<!-- =========================================
+     FIXED BOTTOM NAV
+========================================= -->
+
+<nav class="bottom-nav">
+
+
+    <a
+        href="dashboard.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path
+                    d="M3 10.5L12 3l9 7.5"
+                ></path>
+
+                <path
+                    d="M5.5 9.5V21h13V9.5"
+                ></path>
+
+                <path
+                    d="M9.5 21v-6h5v6"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+
+            Home
+
+        </span>
+
+    </a>
+
+
+    <a
+        href="my-bills.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <rect
+                    x="5"
+                    y="3"
+                    width="14"
+                    height="18"
+                    rx="2"
+                ></rect>
+
+                <path
+                    d="M8 8h8"
+                ></path>
+
+                <path
+                    d="M8 12h8"
+                ></path>
+
+                <path
+                    d="M8 16h5"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+
+            Bills
+
+        </span>
+
+    </a>
+
+
+    <a
+        href="add-bill.html"
+        class="nav-item nav-add active"
+    >
+
+        <span class="nav-add-circle">
+
+            +
+
+        </span>
+
+        <span class="nav-add-label">
+
+            Add
+
+        </span>
+
+    </a>
+
+
+    <a
+        href="summary.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path
+                    d="M5 20V10"
+                ></path>
+
+                <path
+                    d="M12 20V5"
+                ></path>
+
+                <path
+                    d="M19 20V8"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+
+            Insights
+
+        </span>
+
+    </a>
+
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                ></circle>
+
+                <path
+                    d="M5 21c.8-4 3-6 7-6s6.2 2 7 6"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+
+            Me
+
+        </span>
+
+    </a>
+
+
+</nav>
+
+
+<script>
+
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const billFile =
+    document.getElementById(
+        "billFile"
+    );
+
+
+const fileName =
+    document.getElementById(
+        "fileName"
+    );
+
+
+const filePreview =
+    document.getElementById(
+        "filePreview"
+    );
+
+
+const compressionInfo =
+    document.getElementById(
+        "compressionInfo"
+    );
+
+
+const saveBtn =
+    document.getElementById(
+        "saveBtn"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const loadingText =
+    document.getElementById(
+        "loadingText"
+    );
+
+
+const billTitle =
+    document.getElementById(
+        "billTitle"
+    );
+
+
+const shopName =
+    document.getElementById(
+        "shopName"
+    );
+
+
+const billDate =
+    document.getElementById(
+        "billDate"
+    );
+
+
+const totalAmount =
+    document.getElementById(
+        "totalAmount"
+    );
+
+
+const category =
+    document.getElementById(
+        "category"
+    );
+
+
+const profileInitial =
+    document.getElementById(
+        "profileInitial"
+    );
+
+
+/* =========================================
+   FILE VARIABLES
+========================================= */
+
+let preparedFile = null;
+
+let selectedOriginalFile = null;
+
+
+/* =========================================
+   TARGET
+========================================= */
+
+const TARGET_IMAGE_SIZE =
+    900 * 1024;
+
+
+/* =========================================
+   DEFAULT DATE
+========================================= */
+
+billDate.value =
+    new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+/* =========================================
+   BACK
+========================================= */
+
+function goBack(){
+
+    window.location.href =
+        "my-bills.html";
+
+}
+
+
+/* =========================================
+   CLEAR PREVIEW
+========================================= */
+
+function clearPreview(){
+
+    filePreview.innerHTML =
+        "";
+
+    filePreview.style.display =
+        "none";
+
+}
+
+
+/* =========================================
+   FORMAT FILE SIZE
+========================================= */
+
+function formatFileSize(bytes){
+
+    if(bytes < 1024){
+
+        return bytes + " B";
+
+    }
+
+
+    if(bytes < 1024 * 1024){
+
+        return (
+            bytes / 1024
+        ).toFixed(0) + " KB";
+
+    }
+
+
+    return (
+        bytes /
+        (1024 * 1024)
+    ).toFixed(2) + " MB";
+
+}
+
+
+/* =========================================
+   IMAGE TO BLOB
+========================================= */
+
+function canvasToBlob(
+    canvas,
+    quality
+){
+
+    return new Promise(
+        function(resolve){
+
+            canvas.toBlob(
+                function(blob){
+
+                    resolve(blob);
+
+                },
+                "image/jpeg",
+                quality
+            );
+
+        }
+    );
+
+}
+
+  /* =========================================
+   COMPRESS IMAGE
+========================================= */
+
+async function compressImage(
+    file
+){
+
+    /*
+     * Already small:
+     * no need to compress.
+     */
+
+    if(
+        file.size <=
+        TARGET_IMAGE_SIZE
+    ){
+
+        return file;
+
+    }
+
+
+    const image =
+        new Image();
+
+
+    const objectUrl =
+        URL.createObjectURL(
+            file
+        );
+
+
+    try{
+
+        await new Promise(
+            function(
+                resolve,
+                reject
+            ){
+
+                image.onload =
+                    resolve;
+
+                image.onerror =
+                    reject;
+
+                image.src =
+                    objectUrl;
+
+            }
+        );
+
+
+        /*
+         * Start with good receipt
+         * resolution.
+         */
+
+        let maxDimension =
+            2400;
+
+
+        let scale =
+            Math.min(
+                1,
+                maxDimension /
+                Math.max(
+                    image.naturalWidth,
+                    image.naturalHeight
+                )
+            );
+
+
+        let width =
+            Math.max(
+                1,
+                Math.round(
+                    image.naturalWidth *
+                    scale
+                )
+            );
+
+
+        let height =
+            Math.max(
+                1,
+                Math.round(
+                    image.naturalHeight *
+                    scale
+                )
+            );
+
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+
+        const context =
+            canvas.getContext(
+                "2d",
+                {
+                    alpha:false
+                }
+            );
+
+
+        let quality =
+            0.82;
+
+
+        let blob = null;
+
+
+        /*
+         * First compression loop.
+         */
+
+        for(
+            let attempt = 0;
+            attempt < 8;
+            attempt++
+        ){
+
+            canvas.width =
+                width;
+
+            canvas.height =
+                height;
+
+
+            context.fillStyle =
+                "#ffffff";
+
+
+            context.fillRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            context.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            blob =
+                await canvasToBlob(
+                    canvas,
+                    quality
+                );
+
+
+            if(
+                blob &&
+                blob.size <=
+                TARGET_IMAGE_SIZE
+            ){
+
+                break;
+
+            }
+
+
+            quality -=
+                0.07;
+
+
+            if(
+                quality < 0.40
+            ){
+
+                quality =
+                    0.40;
+
+                break;
+
+            }
+
+        }
+
+
+        /*
+         * If still larger than target,
+         * reduce resolution gradually.
+         */
+
+        let resolutionAttempts =
+            0;
+
+
+        while(
+            blob &&
+            blob.size >
+                TARGET_IMAGE_SIZE &&
+            resolutionAttempts < 6
+        ){
+
+            width =
+                Math.round(
+                    width * 0.85
+                );
+
+
+            height =
+                Math.round(
+                    height * 0.85
+                );
+
+
+            canvas.width =
+                width;
+
+            canvas.height =
+                height;
+
+
+            context.fillStyle =
+                "#ffffff";
+
+
+            context.fillRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            context.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            blob =
+                await canvasToBlob(
+                    canvas,
+                    Math.max(
+                        0.38,
+                        quality
+                    )
+                );
+
+
+            resolutionAttempts++;
+
+        }
+
+
+        if(
+            !blob
+        ){
+
+            throw new Error(
+                "Image compression failed."
+            );
+
+        }
+
+
+        /*
+         * Final file name.
+         */
+
+        const baseName =
+            file.name
+                .replace(
+                    /\.[^/.]+$/,
+                    ""
+                )
+                .replace(
+                    /[^a-zA-Z0-9_-]/g,
+                    "_"
+                );
+
+
+        const compressedName =
+            baseName +
+            "_compressed.jpg";
+
+
+        return new File(
+            [blob],
+            compressedName,
+            {
+                type:
+                    "image/jpeg",
+
+                lastModified:
+                    Date.now()
+            }
+        );
+
+
+    }
+    finally{
+
+        URL.revokeObjectURL(
+            objectUrl
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SHOW IMAGE PREVIEW
+========================================= */
+
+function showImagePreview(
+    file
+){
+
+    clearPreview();
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            file
+        );
+
+
+    image.src =
+        url;
+
+
+    image.alt =
+        "Bill Preview";
+
+
+    image.onload =
+        function(){
+
+            URL.revokeObjectURL(
+                url
+            );
+
+        };
+
+
+    filePreview.appendChild(
+        image
+    );
+
+
+    filePreview.style.display =
+        "block";
+
+}
+
+
+/* =========================================
+   SHOW PDF PREVIEW
+========================================= */
+
+function showPdfPreview(
+    file
+){
+
+    clearPreview();
+
+
+    const iframe =
+        document.createElement(
+            "iframe"
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            file
+        );
+
+
+    iframe.src =
+        url;
+
+
+    iframe.title =
+        "Bill PDF Preview";
+
+
+    filePreview.appendChild(
+        iframe
+    );
+
+
+    filePreview.style.display =
+        "block";
+
+}
+
+
+/* =========================================
+   FILE SELECT
+========================================= */
+
+billFile.addEventListener(
+    "change",
+    async function(){
+
+        clearMessage();
+
+        clearPreview();
+
+
+        compressionInfo.style.display =
+            "none";
+
+
+        preparedFile =
+            null;
+
+
+        selectedOriginalFile =
+            null;
+
+
+        if(
+            !this.files.length
+        ){
+
+            fileName.textContent =
+                "";
+
+            fileName.style.display =
+                "none";
+
+            return;
+
+        }
+
+
+        const originalFile =
+            this.files[0];
+
+
+        selectedOriginalFile =
+            originalFile;
+
+
+        /*
+         * Maximum original selection:
+         * 10 MB.
+         */
+
+        if(
+            originalFile.size >
+            10 * 1024 * 1024
+        ){
+
+            showMessage(
+                "Image/PDF must be below 10 MB.",
+                "error"
+            );
+
+
+            this.value =
+                "";
+
+
+            return;
+
+        }
+
+
+        const isImage =
+            originalFile.type &&
+            originalFile.type.startsWith(
+                "image/"
+            );
+
+
+        const isPdf =
+            originalFile.type ===
+                "application/pdf"
+            ||
+            originalFile.name
+                .toLowerCase()
+                .endsWith(".pdf");
+
+
+        if(
+            !isImage &&
+            !isPdf
+        ){
+
+            showMessage(
+                "Please choose an image or PDF.",
+                "error"
+            );
+
+
+            this.value =
+                "";
+
+
+            return;
+
+        }
+
+
+        /* =========================
+           PDF
+        ========================= */
+
+        if(isPdf){
+
+            preparedFile =
+                originalFile;
+
+
+            fileName.textContent =
+                "Selected: " +
+                originalFile.name +
+                " • " +
+                formatFileSize(
+                    originalFile.size
+                );
+
+
+            fileName.style.display =
+                "block";
+
+
+            showPdfPreview(
+                originalFile
+            );
+
+
+            compressionInfo.textContent =
+                "PDF is kept in its original format.";
+
+
+            compressionInfo.style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        /* =========================
+           IMAGE
+        ========================= */
+
+        fileName.textContent =
+            "Preparing image...";
+
+
+        fileName.style.display =
+            "block";
+
+
+        loadingText.textContent =
+            "Compressing image...";
+
+
+        loadingText.style.display =
+            "block";
+
+
+        try{
+
+            const compressed =
+                await compressImage(
+                    originalFile
+                );
+
+
+            preparedFile =
+                compressed;
+
+
+            fileName.textContent =
+                "Ready: " +
+                originalFile.name +
+                " • " +
+                formatFileSize(
+                    originalFile.size
+                ) +
+                " → " +
+                formatFileSize(
+                    compressed.size
+                );
+
+
+            showImagePreview(
+                compressed
+            );
+
+
+            const savedBytes =
+                Math.max(
+                    0,
+                    originalFile.size -
+                    compressed.size
+                );
+
+
+            const savedPercent =
+                originalFile.size > 0
+                    ? (
+                        savedBytes /
+                        originalFile.size *
+                        100
+                    ).toFixed(0)
+                    : 0;
+
+
+            compressionInfo.textContent =
+                "Compressed for storage • Saved " +
+                savedPercent +
+                "% • Upload size " +
+                formatFileSize(
+                    compressed.size
+                );
+
+
+            compressionInfo.style.display =
+                "block";
+
+
+        }
+        catch(error){
+
+            console.error(
+                "Compression error:",
+                error
+            );
+
+
+            showMessage(
+                "Could not compress this image. Please try another image.",
+                "error"
+            );
+
+
+            preparedFile =
+                null;
+
+        }
+        finally{
+
+            loadingText.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+  /* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+function clearMessage(){
+
+    message.textContent =
+        "";
+
+    message.className =
+        "message";
+
+}
+
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+async function getCurrentUser(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+    if(
+        error ||
+        !data ||
+        !data.session ||
+        !data.session.user
+    ){
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+    return data.session.user;
+
+}
+
+
+/* =========================================
+   USER INITIAL
+========================================= */
+
+async function loadUserInitial(){
+
+    const user =
+        await getCurrentUser();
+
+
+    if(!user){
+
+        return;
+
+    }
+
+
+    let fullName =
+        user.user_metadata?.full_name
+        ||
+        user.user_metadata?.name
+        ||
+        "";
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("full_name")
+                .eq(
+                    "id",
+                    user.id
+                )
+                .maybeSingle();
+
+
+        if(
+            !error &&
+            data &&
+            data.full_name
+        ){
+
+            fullName =
+                data.full_name;
+
+        }
+
+    }
+    catch(error){
+
+        console.log(
+            "Profile name unavailable:",
+            error
+        );
+
+    }
+
+
+    const firstName =
+        String(fullName)
+            .trim()
+            .split(/\s+/)[0];
+
+
+    profileInitial.textContent =
+        firstName
+            ? firstName
+                .charAt(0)
+                .toUpperCase()
+
+            : "S";
+
+}
+
+
+/* =========================================
+   FORM VALIDATION
+========================================= */
+
+function validateForm(){
+
+    const title =
+        billTitle.value.trim();
+
+
+    if(!title){
+
+        return {
+
+            valid:false,
+
+            message:
+                "Please enter a bill title."
+
+        };
+
+    }
+
+
+    if(
+        title.length < 2
+    ){
+
+        return {
+
+            valid:false,
+
+            message:
+                "Bill title is too short."
+
+        };
+
+    }
+
+
+    const amountText =
+        totalAmount.value.trim();
+
+
+    if(amountText){
+
+        const amount =
+            Number(
+                amountText
+            );
+
+
+        if(
+            !Number.isFinite(
+                amount
+            )
+            ||
+            amount < 0
+        ){
+
+            return {
+
+                valid:false,
+
+                message:
+                    "Please enter a valid bill amount."
+
+            };
+
+        }
+
+    }
+
+
+    return {
+
+        valid:true
+
+    };
+
+}
+
+
+/* =========================================
+   SAVE BILL
+========================================= */
+
+async function saveBill(){
+
+    clearMessage();
+
+
+    const formCheck =
+        validateForm();
+
+
+    if(
+        !formCheck.valid
+    ){
+
+        showMessage(
+            formCheck.message,
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        await getCurrentUser();
+
+
+    if(!user){
+
+        return;
+
+    }
+
+
+    /*
+     * If image compression is still
+     * running or failed.
+     */
+
+    if(
+        !preparedFile
+    ){
+
+        showMessage(
+            "Please choose a bill image or PDF first.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const file =
+        preparedFile;
+
+
+    const title =
+        billTitle.value.trim();
+
+
+    const shop =
+        shopName.value.trim()
+        ||
+        null;
+
+
+    const date =
+        billDate.value
+        ||
+        null;
+
+
+    const amountText =
+        totalAmount.value.trim();
+
+
+    const amount =
+        amountText
+            ? Number(
+                amountText
+              )
+            : null;
+
+
+    const selectedCategory =
+        category.value
+        ||
+        null;
+
+
+    saveBtn.disabled =
+        true;
+
+
+    saveBtn.textContent =
+        "Saving...";
+
+
+    loadingText.textContent =
+        "Uploading your bill...";
+
+
+    loadingText.style.display =
+        "block";
+
+
+    let filePath =
+        null;
+
+
+    try{
+
+        /* =========================
+           SAFE NAME
+        ========================= */
+
+        const safeName =
+            file.name
+                .replace(
+                    /[^a-zA-Z0-9._-]/g,
+                    "_"
+                );
+
+
+        /* =========================
+           STORAGE PATH
+        ========================= */
+
+        filePath =
+            user.id +
+            "/" +
+            Date.now() +
+            "_" +
+            safeName;
+
+
+        /* =========================
+           STORAGE UPLOAD
+        ========================= */
+
+        const {
+            error:
+                uploadError
+        } =
+            await supabaseClient
+                .storage
+                .from("bills")
+                .upload(
+                    filePath,
+                    file,
+                    {
+
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false,
+
+                        contentType:
+                            file.type
+                            ||
+                            "application/octet-stream"
+
+                    }
+                );
+
+
+        if(uploadError){
+
+            throw new Error(
+                "Storage upload failed: " +
+                uploadError.message
+            );
+
+        }
+
+
+        /* =========================
+           DATABASE
+        ========================= */
+
+        loadingText.textContent =
+            "Saving your bill details...";
+
+
+        const {
+            error:
+                insertError
+        } =
+            await supabaseClient
+                .from("bills")
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    title:
+                        title,
+
+                    shop_name:
+                        shop,
+
+                    bill_date:
+                        date,
+
+                    total_amount:
+                        amount,
+
+                    category:
+                        selectedCategory,
+
+                    file_path:
+                        filePath,
+
+                    file_type:
+                        file.type
+                        ||
+                        null,
+
+                    file_size:
+                        file.size
+
+                });
+
+
+        if(insertError){
+
+            /*
+             * Remove uploaded file if
+             * database insert fails.
+             */
+
+            await supabaseClient
+                .storage
+                .from("bills")
+                .remove([
+                    filePath
+                ]);
+
+
+            throw new Error(
+                "Bill details could not be saved: " +
+                insertError.message
+            );
+
+        }
+
+
+        /* =========================
+           SUCCESS
+        ========================= */
+
+        showMessage(
+            "Bill saved successfully!",
+            "success"
+        );
+
+
+        saveBtn.textContent =
+            "Saved ✓";
+
+
+        loadingText.textContent =
+            "Opening Your Bills...";
+
+
+        /*
+         * IMPORTANT:
+         *
+         * No daily_expenses insert.
+         *
+         * This bill is storage only.
+         */
+
+
+        setTimeout(
+            function(){
+
+                window.location.replace(
+                    "my-bills.html"
+                );
+
+            },
+            700
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Bill save error:",
+            error
+        );
+
+
+        showMessage(
+            error?.message
+            ||
+            "Unable to save bill. Please try again.",
+            "error"
+        );
+
+
+        saveBtn.disabled =
+            false;
+
+
+        saveBtn.textContent =
+            "Save Bill";
+
+
+        loadingText.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================
+   INPUT CLEANUP
+========================================= */
+
+billTitle.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+
+                .replace(
+                    /^\s+/,
+                    ""
+                )
+
+                .replace(
+                    /\s{2,}/g,
+                    " "
+                );
+
+    }
+);
+
+
+shopName.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+
+                .replace(
+                    /^\s+/,
+                    ""
+                )
+
+                .replace(
+                    /\s{2,}/g,
+                    " "
+                );
+
+    }
+);
+
+
+/* =========================================
+   SESSION CHECK
+========================================= */
+
+(async function(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if(
+            error ||
+            !data ||
+            !data.session ||
+            !data.session.user
+        ){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        await loadUserInitial();
+
+    }
+    catch(error){
+
+        console.error(
+            "Session check error:",
+            error
+        );
+
+
+        window.location.href =
+            "login.html";
+
+    }
+
+})();
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        function(
+            event,
+            session
+        ){
+
+            if(
+                event ===
+                "SIGNED_OUT"
+            ){
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+/* =========================================
+   ENTER KEY
+========================================= */
+
+billTitle.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            event.preventDefault();
+
+            shopName.focus();
+
+        }
+
+    }
+);
+
+
+shopName.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            event.preventDefault();
+
+            billDate.focus();
+
+        }
+
+    }
+);
+
+
+</script>
+
+</body>
+
+</html>

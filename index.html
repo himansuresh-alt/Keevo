@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#FF6B35"
+    >
+
+    <!-- =========================
+         PWA
+    ========================== -->
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="KEEVO"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="icon-192.png"
+    >
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+
+    <!-- =========================
+         SEO
+    ========================== -->
+
+    <title>
+        KEEVO - Your Digital Bill Wallet
+    </title>
+
+    <meta
+        name="description"
+        
+content="KEEVO, digital bill wallet, bill storage, expense tracker, expense management, save bills, digital bills"
+
+    >
+
+    <meta
+        name="keywords"
+        content="BillSafe, digital bill wallet, bill storage, expense tracker, expense management, save bills, digital bills"
+    >
+
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
+
+    <!-- =========================
+         OPEN GRAPH
+    ========================== -->
+
+    <meta
+        property="og:title"
+        content="BillSafe - Keep Every Bill Safe"
+    >
+
+    <meta
+        property="og:description"
+        
+content="Store your bills safely and track your expenses anytime with KEEVO."
+
+    >
+
+    <meta
+        property="og:type"
+        content="website"
+    >
+
+    <meta
+        property="og:image"
+        content="icon-512.png"
+    >
+
+
+    <!-- =========================
+         STYLE
+    ========================== -->
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+
+        body{
+            font-family:Arial,sans-serif;
+
+            background:#f5f6f8;
+
+            color:#181a1f;
+
+            min-height:100vh;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================== */
+
+        .page{
+            min-height:100vh;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            padding:25px;
+        }
+
+
+        /* =========================
+           MAIN BOX
+        ========================== */
+
+        .box{
+            width:100%;
+
+            max-width:420px;
+
+            background:#ffffff;
+
+            padding:30px 22px;
+
+            border-radius:24px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,0.08);
+
+            text-align:center;
+        }
+
+
+        /* =========================
+           BILL SAFE LOGO
+        ========================== */
+
+        .app-logo{
+            width:110px;
+
+            height:110px;
+
+            object-fit:contain;
+
+            display:block;
+
+            margin:25px auto 22px;
+        }
+
+
+        /* =========================
+           MAIN CONTENT
+        ========================== */
+
+        h1{
+            font-size:24px;
+
+            line-height:1.25;
+
+            margin-bottom:10px;
+        }
+
+
+        .description{
+            color:#777;
+
+            font-size:14px;
+
+            line-height:1.6;
+
+            margin-bottom:25px;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .btn{
+            display:block;
+
+            width:100%;
+
+            padding:15px;
+
+            border-radius:13px;
+
+            text-decoration:none;
+
+            font-weight:700;
+
+            font-size:15px;
+
+            margin-top:12px;
+
+            cursor:pointer;
+
+            transition:
+                transform .2s ease,
+                opacity .2s ease;
+        }
+
+
+        .btn:active{
+            transform:scale(.98);
+        }
+
+
+        .primary{
+            background:#FF6B35;
+
+            color:white;
+
+            border:none;
+        }
+
+
+        .secondary{
+            background:white;
+
+            color:#FF6B35;
+
+            border:1px solid #FF6B35;
+        }
+
+
+        /* =========================
+           INSTALL BUTTON
+        ========================== */
+
+        .install{
+            background:#181a1f;
+
+            color:white;
+
+            border:none;
+
+            display:none;
+        }
+
+
+        .install:disabled{
+            opacity:.65;
+
+            cursor:not-allowed;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .footer{
+            margin-top:25px;
+
+            color:#999;
+
+            font-size:12px;
+
+            line-height:1.5;
+        }
+
+
+        /* =========================
+           SMALL MOBILE
+        ========================== */
+
+        @media(
+            max-width:360px
+        ){
+
+            .page{
+                padding:15px;
+            }
+
+
+            .box{
+                padding:22px 18px;
+
+                border-radius:20px;
+            }
+
+
+            .app-logo{
+                width:95px;
+
+                height:95px;
+
+                margin-top:25px;
+
+                margin-bottom:20px;
+            }
+
+
+            h1{
+                font-size:22px;
+            }
+
+
+            .description{
+                font-size:13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <div class="box">
+
+
+        <!-- =========================
+             BILL SAFE LOGO
+        ========================== -->
+
+        <img
+            src="icon-192.png"
+            
+alt="KEEVO digital bill wallet logo"
+
+            class="app-logo"
+        >
+
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================== -->
+
+        <h1>
+
+            Your Digital Bill Wallet
+
+        </h1>
+
+
+        <p class="description">
+
+            Upload your bills, keep them safe,
+            and know your expenses anytime.
+
+        </p>
+
+
+        <!-- =========================
+             LOGIN
+        ========================== -->
+
+        <a
+            href="login.html"
+            class="btn primary"
+        >
+
+            Login
+
+        </a>
+
+
+        <!-- =========================
+             CREATE ACCOUNT
+        ========================== -->
+
+        <a
+            href="create-account.html"
+            class="btn secondary"
+        >
+
+            Create Account
+
+        </a>
+
+
+        <!-- =========================
+             PWA INSTALL
+        ========================== -->
+
+        <button
+            id="installBtn"
+            class="btn install"
+            type="button"
+        >
+
+            📱 Install BillSafe
+
+        </button>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <div class="footer">
+
+            BillSafe · Keep every bill safe.
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==================================================
+     PWA INSTALL SYSTEM
+================================================== -->
+
+<script>
+
+let deferredPrompt = null;
+
+
+const installBtn =
+    document.getElementById(
+        "installBtn"
+    );
+
+
+/* =================================
+   INSTALL PROMPT AVAILABLE
+================================= */
+
+window.addEventListener(
+    "beforeinstallprompt",
+    function(event){
+
+        event.preventDefault();
+
+        deferredPrompt =
+            event;
+
+
+        installBtn.style.display =
+            "block";
+
+    }
+);
+
+
+/* =================================
+   INSTALL BUTTON
+================================= */
+
+installBtn.addEventListener(
+    "click",
+    async function(){
+
+        if(!deferredPrompt){
+
+            return;
+
+        }
+
+
+        installBtn.disabled =
+            true;
+
+
+        try{
+
+            await deferredPrompt.prompt();
+
+
+            const result =
+                await deferredPrompt.userChoice;
+
+
+            console.log(
+                "BillSafe install result:",
+                result.outcome
+            );
+
+        }
+        catch(error){
+
+            console.error(
+                "BillSafe install error:",
+                error
+            );
+
+        }
+
+
+        deferredPrompt =
+            null;
+
+
+        installBtn.style.display =
+            "none";
+
+    }
+);
+
+
+/* =================================
+   APP INSTALLED
+================================= */
+
+window.addEventListener(
+    "appinstalled",
+    function(){
+
+        console.log(
+            "BillSafe installed successfully."
+        );
+
+
+        deferredPrompt =
+            null;
+
+
+        installBtn.style.display =
+            "none";
+
+    }
+);
+
+</script>
+
+
+
+<!-- ==================================================
+     SERVICE WORKER
+================================================== -->
+
+<script>
+
+if(
+    "serviceWorker" in navigator
+){
+
+    window.addEventListener(
+        "load",
+        function(){
+
+            navigator.serviceWorker
+                .register(
+                    "service-worker.js"
+                )
+                .then(
+                    function(registration){
+
+                        console.log(
+                            "BillSafe PWA registered successfully.",
+                            registration.scope
+                        );
+
+                    }
+                )
+                .catch(
+                    function(error){
+
+                        console.error(
+                            "BillSafe PWA registration failed:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

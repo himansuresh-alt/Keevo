@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#FF6B35"
+    >
+
+    <title>Login - BillSafe</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f5f6f8;
+            color:#181a1f;
+        }
+
+        .page{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        }
+
+        .box{
+            width:100%;
+            max-width:420px;
+            background:#ffffff;
+            padding:30px 22px;
+            border-radius:24px;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .logo{
+            text-align:center;
+            font-size:36px;
+            font-weight:900;
+            margin-bottom:5px;
+        }
+
+        .logo span{
+            color:#FF6B35;
+        }
+
+        .tagline{
+            text-align:center;
+            color:#777;
+            font-size:13px;
+            margin-bottom:30px;
+        }
+
+        h1{
+            font-size:25px;
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            color:#777;
+            font-size:14px;
+            margin-bottom:25px;
+        }
+
+        label{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:7px;
+        }
+
+        .input{
+            width:100%;
+            padding:14px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            outline:none;
+            font-size:15px;
+            margin-bottom:17px;
+        }
+
+        .input:focus{
+            border-color:#FF6B35;
+        }
+
+        .forgot{
+            display:block;
+            text-align:right;
+            color:#FF6B35;
+            text-decoration:none;
+            font-size:13px;
+            font-weight:600;
+            margin-top:-8px;
+            margin-bottom:20px;
+        }
+
+        .btn{
+            width:100%;
+            border:none;
+            padding:15px;
+            border-radius:13px;
+            background:#FF6B35;
+            color:white;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .btn:disabled{
+            opacity:0.6;
+            cursor:not-allowed;
+        }
+
+        .create{
+            text-align:center;
+            margin-top:22px;
+            font-size:14px;
+            color:#777;
+        }
+
+        .create a{
+            color:#FF6B35;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .back{
+            display:block;
+            text-align:center;
+            margin-top:18px;
+            color:#555;
+            text-decoration:none;
+            font-size:13px;
+        }
+
+        .message{
+            display:none;
+            margin-bottom:18px;
+            padding:12px;
+            border-radius:10px;
+            font-size:13px;
+            line-height:1.5;
+        }
+
+        .message.success{
+            display:block;
+            background:#eaf8ef;
+            color:#18743a;
+        }
+
+        .message.error{
+            display:block;
+            background:#fff0f0;
+            color:#c62828;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="box">
+
+        <div class="logo">
+            KEEVO
+        </div>
+
+        <div class="tagline">
+            Your Digital Bill Wallet
+        </div>
+
+
+        <h1>
+            Welcome Back
+        </h1>
+
+        <p class="subtitle">
+            Login to access your bills and expenses.
+        </p>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <form id="loginForm">
+
+            <label for="email">
+                Email ID
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                class="input"
+                placeholder="Enter your email address"
+                autocomplete="email"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                class="input"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+
+            <a
+                href="forgot-password.html"
+                class="forgot"
+            >
+                Forgot Password?
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn"
+                id="loginBtn"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="create">
+
+            Don't have an account?
+
+            <a href="create-account.html">
+                Create Account
+            </a>
+
+        </div>
+
+
+        <a
+            href="index.html"
+            class="back"
+        >
+            ← Back to KEEVO
+        </a>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =================================
+   BILLSAFE SUPABASE CONNECTION
+================================= */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =================================
+   EXISTING SESSION CHECK
+================================= */
+
+/*
+   If the user is already logged in,
+   do not show the login page again.
+
+   Send the user directly to Dashboard.
+
+   Session remains active even if the
+   website is closed and opened again.
+
+   Only Logout will clear the session.
+*/
+
+(async function(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+            .auth
+            .getSession();
+
+
+        if(
+            !error &&
+            data &&
+            data.session &&
+            data.session.user
+        ){
+
+            window.location.href =
+                "dashboard.html";
+
+            return;
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Session check error:",
+            error
+        );
+
+    }
+
+})();
+
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const loginBtn =
+    document.getElementById(
+        "loginBtn"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+/* =================================
+   SHOW MESSAGE
+================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+/* =================================
+   EMAIL CLEANUP
+================================= */
+
+emailInput.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+            .trim()
+            .toLowerCase();
+
+    }
+);
+
+
+/* =================================
+   LOGIN
+================================= */
+
+loginForm.addEventListener(
+    "submit",
+    async function(event){
+
+        event.preventDefault();
+
+
+        const email =
+            emailInput
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+            passwordInput.value;
+
+
+        /* ==========================
+           VALIDATION
+        ========================== */
+
+        if(!email || !password){
+
+            showMessage(
+                "Please enter your email and password.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           BUTTON STATE
+        ========================== */
+
+        loginBtn.disabled =
+            true;
+
+        loginBtn.textContent =
+            "Logging in...";
+
+
+        try{
+
+            /* ======================
+               SUPABASE LOGIN
+            ====================== */
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email:email,
+
+                    password:password
+
+                });
+
+
+            if(error){
+
+                throw error;
+
+            }
+
+
+            /* ======================
+               SUCCESS
+            ====================== */
+
+            if(
+                data &&
+                data.session
+            ){
+
+                showMessage(
+                    "Login successful. Opening BillSafe...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function(){
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    },
+                    700
+                );
+
+
+                return;
+
+            }
+
+
+            throw new Error(
+                "Login could not be completed. Please try again."
+            );
+
+
+        }
+        catch(error){
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            let errorMessage =
+                "Login failed. Please check your email and password.";
+
+
+            if(
+                error &&
+                error.message
+            ){
+
+                const msg =
+                    error.message.toLowerCase();
+
+
+                if(
+                    msg.includes(
+                        "invalid login credentials"
+                    )
+                ){
+
+                    errorMessage =
+                        "Incorrect email or password.";
+
+                }
+
+                else if(
+                    msg.includes(
+                        "user not found"
+                    )
+                ){
+
+                    errorMessage =
+                        "Account not found. Please create an account.";
+
+                }
+
+                else if(
+                    msg.includes(
+                        "too many requests"
+                    )
+                ){
+
+                    errorMessage =
+                        "Too many login attempts. Please try again later.";
+
+                }
+
+                else if(
+                    msg.includes(
+                        "network"
+                    )
+                ){
+
+                    errorMessage =
+                        "Network error. Please check your internet connection.";
+
+                }
+
+            }
+
+
+            showMessage(
+                errorMessage,
+                "error"
+            );
+
+
+            loginBtn.disabled =
+                false;
+
+
+            loginBtn.textContent =
+                "Login";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

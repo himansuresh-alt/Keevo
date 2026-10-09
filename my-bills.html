@@ -1,0 +1,2967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>Your Bills</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    width:100%;
+    min-height:100%;
+    background:#f7f7f6;
+}
+
+body{
+    width:100%;
+    min-height:100vh;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    background:#f7f7f6;
+    color:#171717;
+    padding-bottom:92px;
+    -webkit-font-smoothing:antialiased;
+}
+
+
+/* =========================================================
+   3D DYNAMIC YOUR BILLS HEADER
+========================================================= */
+
+.top-header{
+
+    width:100%;
+    max-width:620px;
+
+    height:225px;
+
+    margin:0 auto;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:0;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(255,255,255,.95) 0%,
+            rgba(255,255,255,.35) 18%,
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #ff6b35 0%,
+            #ff7040 42%,
+            #ff9a6f 100%
+        );
+
+    border-radius:
+        0 0 30px 30px;
+
+    box-shadow:
+        0 18px 38px
+        rgba(255,107,53,.18);
+
+    perspective:1000px;
+
+    isolation:isolate;
+}
+
+
+/* =========================================================
+   SOFT 3D LIGHT
+========================================================= */
+
+.top-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    right:-90px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.20);
+
+    filter:blur(2px);
+
+    animation:
+        headerFloat 5s ease-in-out infinite;
+
+    z-index:0;
+}
+
+
+.top-header::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    left:-80px;
+    bottom:-105px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.10);
+
+    animation:
+        headerFloat2 6s ease-in-out infinite;
+
+    z-index:0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.header-back{
+
+    position:absolute;
+
+    left:17px;
+    top:17px;
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    color:#ffffff;
+
+    font-size:28px;
+
+    border-radius:13px;
+
+    background:
+        rgba(255,255,255,.16);
+
+    border:
+        1px solid
+        rgba(255,255,255,.28);
+
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(0,0,0,.10);
+
+    z-index:20;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.header-back:active{
+
+    transform:scale(.92);
+}
+
+
+/* =========================================================
+   3D BILL CARD
+========================================================= */
+
+.header-bill-card{
+
+    position:absolute;
+
+    right:25px;
+    top:34px;
+
+    width:75px;
+    height:98px;
+
+    background:#ffffff;
+
+    border-radius:12px;
+
+    transform:
+        rotate(9deg)
+        rotateX(7deg)
+        rotateY(-8deg);
+
+    box-shadow:
+        12px 18px 28px
+        rgba(100,35,10,.20);
+
+    z-index:4;
+
+    animation:
+        billFloat 4s ease-in-out infinite;
+
+    overflow:hidden;
+}
+
+
+.header-bill-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:13px;
+    right:13px;
+    top:18px;
+
+    height:7px;
+
+    border-radius:5px;
+
+    background:#ff7045;
+
+    box-shadow:
+        0 16px 0 #eeeeee,
+        0 32px 0 #eeeeee,
+        0 48px 0 #eeeeee;
+}
+
+
+.header-bill-card::after{
+
+    content:"₹";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:7px;
+
+    text-align:center;
+
+    color:#ff6337;
+
+    font-size:17px;
+
+    font-weight:900;
+}
+
+
+/* =========================================================
+   3D SMALL FLOATING CARD
+========================================================= */
+
+.header-mini-card{
+
+    position:absolute;
+
+    right:82px;
+    top:100px;
+
+    width:55px;
+    height:38px;
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.92);
+
+    transform:
+        rotate(-10deg)
+        rotateX(8deg);
+
+    box-shadow:
+        8px 12px 20px
+        rgba(100,35,10,.16);
+
+    z-index:5;
+
+    animation:
+        miniFloat 4.8s ease-in-out infinite;
+}
+
+
+.header-mini-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:10px;
+    right:10px;
+    top:11px;
+
+    height:5px;
+
+    border-radius:4px;
+
+    background:#ff9a7a;
+
+    box-shadow:
+        0 10px 0 #eeeeee;
+}
+
+
+/* =========================================================
+   HEADER TEXT
+========================================================= */
+
+.header-content{
+
+    position:absolute;
+
+    left:21px;
+    bottom:24px;
+
+    z-index:10;
+
+    color:#ffffff;
+
+    text-shadow:
+        0 3px 10px
+        rgba(120,35,10,.14);
+}
+
+
+.header-eyebrow{
+
+    font-size:12px;
+
+    font-weight:600;
+
+    opacity:.82;
+
+    margin-bottom:5px;
+
+    letter-spacing:.3px;
+}
+
+
+.header-main-title{
+
+    margin:0;
+
+    font-size:29px;
+
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:-1.2px;
+}
+
+
+.header-subtitle{
+
+    margin-top:9px;
+
+    font-size:12px;
+
+    font-weight:500;
+
+    opacity:.88;
+
+    max-width:230px;
+
+    line-height:1.4;
+}
+
+
+/* =========================================================
+   HEADER TITLE ROW
+========================================================= */
+
+.header-title-row{
+
+    position:relative;
+
+    z-index:10;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+
+.header-count{
+
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-width:58px;
+    height:30px;
+
+    padding:0 11px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.22);
+
+    border:1px solid rgba(255,255,255,.38);
+
+    color:#ffffff;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    box-shadow:
+        0 5px 14px rgba(120,35,10,.10),
+        inset 0 1px 0 rgba(255,255,255,.30);
+
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+}
+
+
+/* =========================================================
+   3D GLOW
+========================================================= */
+
+.header-glow{
+
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    left:42%;
+
+    top:15px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.12);
+
+    filter:blur(18px);
+
+    animation:
+        glowMove 5s ease-in-out infinite;
+
+    z-index:1;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes billFloat{
+
+    0%,100%{
+
+        transform:
+            translateY(0)
+            rotate(9deg)
+            rotateX(7deg)
+            rotateY(-8deg);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-9px)
+            rotate(5deg)
+            rotateX(10deg)
+            rotateY(-4deg);
+
+    }
+
+}
+
+
+@keyframes miniFloat{
+
+    0%,100%{
+
+        transform:
+            translateY(0)
+            rotate(-10deg)
+            rotateX(8deg);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-7px)
+            rotate(-6deg)
+            rotateX(12deg);
+
+    }
+
+}
+
+
+@keyframes headerFloat{
+
+    0%,100%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(-15px,12px);
+    }
+
+}
+
+
+@keyframes headerFloat2{
+
+    0%,100%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(14px,-10px);
+    }
+
+}
+
+
+@keyframes glowMove{
+
+    0%,100%{
+        transform:translateX(-20px);
+        opacity:.55;
+    }
+
+    50%{
+        transform:translateX(35px);
+        opacity:.9;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+========================================================= */
+
+@media(max-width:480px){
+
+    .top-header{
+
+        height:225px;
+
+        border-radius:
+            0 0 30px 30px;
+    }
+
+    .header-back{
+
+        width:38px;
+        height:38px;
+
+        font-size:25px;
+    }
+
+    .header-bill-card{
+
+        right:25px;
+        top:34px;
+
+        width:75px;
+        height:98px;
+    }
+
+    .header-mini-card{
+
+        right:82px;
+        top:100px;
+    }
+
+    .header-content{
+
+        left:21px;
+        bottom:24px;
+    }
+
+    .header-main-title{
+
+        font-size:29px;
+    }
+
+    .header-subtitle{
+
+        font-size:12px;
+        max-width:230px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media(max-width:360px){
+
+    .top-header{
+
+        height:215px;
+    }
+
+    .header-bill-card{
+
+        right:20px;
+
+        width:68px;
+        height:90px;
+    }
+
+    .header-mini-card{
+
+        right:73px;
+    }
+
+    .header-main-title{
+
+        font-size:27px;
+    }
+
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+
+    width:100%;
+    max-width:620px;
+
+    margin:0 auto;
+
+    padding:
+        22px 18px 35px;
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.intro{
+
+    padding:
+        4px 4px 20px;
+}
+
+.intro-small{
+
+    color:#777;
+
+    font-size:13px;
+
+    margin-bottom:7px;
+}
+
+.intro-row{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.intro h1{
+
+    font-size:29px;
+
+    line-height:1.08;
+
+    letter-spacing:-1px;
+
+    font-weight:800;
+}
+
+.bill-count{
+
+    background:#fff0e9;
+
+    color:#ef542c;
+
+    padding:
+        7px 11px;
+
+    border-radius:30px;
+
+    font-size:12px;
+    font-weight:750;
+
+    white-space:nowrap;
+}
+
+  /* =========================================================
+   SEARCH
+========================================================= */
+
+.search-wrap{
+
+    position:relative;
+
+    margin-bottom:15px;
+}
+
+.search-icon{
+
+    position:absolute;
+
+    left:15px;
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    color:#8b8b8b;
+
+    font-size:18px;
+
+    pointer-events:none;
+}
+
+.search{
+
+    width:100%;
+
+    height:48px;
+
+    border:
+        1px solid #e6e6e6;
+
+    border-radius:16px;
+
+    background:#ffffff;
+
+    outline:none;
+
+    padding:
+        0 46px 0 44px;
+
+    font-size:14px;
+
+    color:#171717;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,.025);
+}
+
+.search::placeholder{
+    color:#9b9b9b;
+}
+
+.search:focus{
+
+    border-color:
+        rgba(255,107,53,.45);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255,107,53,.08);
+}
+
+.filter-button{
+
+    position:absolute;
+
+    right:9px;
+    top:7px;
+
+    width:34px;
+    height:34px;
+
+    border:none;
+
+    background:#f7f7f7;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#333;
+
+    font-size:17px;
+}
+
+
+/* =========================================================
+   FILTER PILLS
+========================================================= */
+
+.filter-row{
+
+    display:flex;
+
+    gap:9px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+
+    padding:
+        1px 1px 15px;
+}
+
+.filter-row::-webkit-scrollbar{
+    display:none;
+}
+
+.filter-pill{
+
+    border:
+        1px solid #e8e8e8;
+
+    background:#ffffff;
+
+    color:#666;
+
+    padding:
+        9px 16px;
+
+    border-radius:13px;
+
+    font-size:12px;
+
+    font-weight:650;
+
+    white-space:nowrap;
+}
+
+.filter-pill.active{
+
+    background:#ff6538;
+
+    color:#ffffff;
+
+    border-color:#ff6538;
+
+    box-shadow:
+        0 5px 12px
+        rgba(255,101,56,.16);
+}
+
+
+/* =========================================================
+   BILL LIST
+========================================================= */
+
+#billList{
+
+    width:100%;
+}
+
+.bill{
+
+    width:100%;
+
+    min-height:78px;
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:18px;
+
+    padding:
+        13px 13px;
+
+    margin-bottom:11px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    box-shadow:
+        0 4px 16px
+        rgba(0,0,0,.035);
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.bill:active{
+
+    transform:
+        scale(.992);
+
+    box-shadow:
+        0 2px 9px
+        rgba(0,0,0,.03);
+}
+
+
+/* =========================================================
+   BILL ICON
+========================================================= */
+
+.bill-icon{
+
+    width:47px;
+    height:47px;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#fff3ed;
+
+    font-size:23px;
+
+    flex-shrink:0;
+}
+
+
+/* =========================================================
+   BILL INFO
+========================================================= */
+
+.bill-info{
+
+    flex:1;
+
+    min-width:0;
+}
+
+.bill-info h3{
+
+    font-size:14px;
+
+    line-height:1.2;
+
+    font-weight:750;
+
+    margin-bottom:4px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.shop-name{
+
+    color:#777;
+
+    font-size:11px;
+
+    line-height:1.2;
+
+    margin-bottom:4px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.bill-date{
+
+    color:#999;
+
+    font-size:10px;
+
+    line-height:1.2;
+}
+
+
+/* =========================================================
+   BILL RIGHT
+========================================================= */
+
+.bill-right{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    gap:6px;
+
+    flex-shrink:0;
+}
+
+.amount{
+
+    font-size:14px;
+
+    font-weight:800;
+
+    color:#171717;
+
+    white-space:nowrap;
+}
+
+.view{
+
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-width:51px;
+
+    height:26px;
+
+    padding:
+        0 10px;
+
+    border-radius:9px;
+
+    background:#fff0e9;
+
+    color:#ef542c;
+
+    text-decoration:none;
+
+    font-size:10px;
+
+    font-weight:750;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:18px;
+
+    padding:45px 20px;
+
+    text-align:center;
+
+    color:#8a8a8a;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+
+    display:none;
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:20px;
+
+    padding:
+        45px 22px;
+
+    text-align:center;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.025);
+}
+
+.empty-icon{
+
+    width:64px;
+    height:64px;
+
+    margin:
+        0 auto 15px;
+
+    border-radius:20px;
+
+    background:#fff3ed;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:30px;
+}
+
+.empty h3{
+
+    font-size:17px;
+
+    margin-bottom:7px;
+}
+
+.empty p{
+
+    color:#888;
+
+    font-size:13px;
+
+    line-height:1.5;
+}
+
+.add-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    height:43px;
+
+    padding:
+        0 20px;
+
+    margin-top:18px;
+
+    border-radius:13px;
+
+    background:#ff6538;
+
+    color:#ffffff;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:750;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error-box{
+
+    display:none;
+
+    background:#fff1f1;
+
+    color:#c62828;
+
+    border-radius:15px;
+
+    padding:14px;
+
+    margin-bottom:15px;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+/* =========================================================
+   NO RESULT
+========================================================= */
+
+.no-result{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:20px;
+
+    padding:
+        42px 20px;
+
+    text-align:center;
+
+    color:#888;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.025);
+}
+
+.no-result-icon{
+
+    font-size:31px;
+
+    margin-bottom:10px;
+}
+
+.no-result h3{
+
+    color:#222;
+
+    font-size:16px;
+
+    margin-bottom:6px;
+}
+
+.no-result p{
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+
+/* =========================================================
+   3D FLOATING BOTTOM NAVIGATION
+========================================================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:14px;
+    right:14px;
+    bottom:12px;
+
+    height:70px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f3f3f3
+        );
+
+    border:1px solid rgba(255,255,255,.95);
+
+    border-radius:26px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+
+    padding:5px 5px 6px;
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.12),
+        0 4px 10px rgba(0,0,0,.06),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -2px 5px rgba(0,0,0,.035);
+
+    z-index:1000;
+}
+
+
+.nav-item{
+
+    width:20%;
+    height:58px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:3px;
+
+    text-decoration:none;
+
+    color:#888;
+
+    font-size:10px;
+    font-weight:600;
+
+    border-radius:18px;
+
+    transition:
+        transform .18s ease,
+        color .18s ease;
+}
+
+
+.nav-item.active{
+
+    color:#FF6B35;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff7f2,
+            #ffffff
+        );
+
+    box-shadow:
+        inset 0 2px 4px rgba(255,107,53,.08),
+        0 3px 8px rgba(0,0,0,.04);
+}
+
+
+.nav-icon{
+
+    width:25px;
+    height:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+}
+
+
+.nav-icon svg{
+
+    width:20px;
+    height:20px;
+
+    fill:none;
+
+    stroke:currentColor;
+
+    stroke-width:2;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+.nav-add{
+
+    position:relative;
+
+    margin-top:-27px;
+
+    height:70px;
+
+    z-index:5;
+}
+
+
+.nav-add-circle{
+
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#ffffff;
+
+    font-size:30px;
+    font-weight:300;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff7040,
+            #f4511e
+        );
+
+    border:4px solid #ffffff;
+
+    box-shadow:
+        0 10px 18px rgba(255,107,53,.30),
+        0 4px 8px rgba(0,0,0,.12),
+        inset 0 2px 2px rgba(255,255,255,.35),
+        inset 0 -4px 5px rgba(180,50,10,.18);
+}
+
+
+.nav-add-label{
+
+    margin-top:3px;
+
+    color:#777;
+
+    font-size:10px;
+    font-weight:600;
+}
+
+
+.nav-item:active{
+
+    transform:
+        translateY(2px)
+        scale(.96);
+}
+
+
+.nav-add:active .nav-add-circle{
+
+    transform:
+        translateY(3px)
+        scale(.94);
+}
+
+  /* =========================================================
+   MOBILE BOTTOM NAV + PAGE
+========================================================= */
+
+@media(max-width:480px){
+
+    .bottom-nav{
+
+        left:12px;
+        right:12px;
+        bottom:10px;
+
+        height:70px;
+
+        border-radius:25px;
+    }
+
+    .page{
+
+        padding:
+            20px 15px 32px;
+    }
+
+    .intro{
+
+        padding:
+            2px 2px 17px;
+    }
+
+    .intro-small{
+
+        font-size:12px;
+    }
+
+    .intro h1{
+
+        font-size:27px;
+    }
+
+    .bill-count{
+
+        font-size:11px;
+
+        padding:
+            6px 10px;
+    }
+
+    .search{
+
+        height:47px;
+
+        border-radius:15px;
+    }
+
+    .filter-pill{
+
+        padding:
+            8px 14px;
+    }
+
+    .bill{
+
+        min-height:76px;
+
+        padding:
+            12px;
+
+        border-radius:17px;
+    }
+
+    .bill-icon{
+
+        width:45px;
+        height:45px;
+
+        border-radius:14px;
+
+        font-size:21px;
+    }
+
+    .bill-info h3{
+
+        font-size:13px;
+    }
+
+    .amount{
+
+        font-size:13px;
+    }
+
+    .view{
+
+        min-width:49px;
+
+        height:25px;
+
+        font-size:10px;
+    }
+
+    .bottom-nav{
+
+        height:76px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media(max-width:360px){
+
+    .bottom-nav{
+
+        left:9px;
+        right:9px;
+    }
+
+    .nav-item{
+
+        font-size:9px;
+    }
+
+    .nav-add-circle{
+
+        width:54px;
+        height:54px;
+    }
+
+    .page{
+
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .intro h1{
+
+        font-size:25px;
+    }
+
+    .bill{
+
+        gap:9px;
+    }
+
+    .bill-icon{
+
+        width:42px;
+        height:42px;
+    }
+
+    .bill-right{
+
+        gap:5px;
+    }
+
+    .amount{
+
+        font-size:12px;
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(min-width:700px){
+
+    body{
+
+        padding-bottom:95px;
+    }
+
+    .top-header{
+
+        padding-left:
+            max(22px, calc((100vw - 620px) / 2));
+
+        padding-right:
+            max(22px, calc((100vw - 620px) / 2));
+    }
+
+    .page{
+
+        padding-top:28px;
+    }
+
+    .bottom-nav{
+
+        width:620px;
+
+        left:50%;
+
+        right:auto;
+
+        transform:
+            translateX(-50%);
+
+        border:
+            1px solid #ededed;
+
+        border-bottom:none;
+
+        border-radius:
+            20px 20px 0 0;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     YOUR BILLS HEADER
+===================================================== -->
+
+<header class="top-header">
+
+    <!-- BACK -->
+
+    <a
+        href="dashboard.html"
+        class="header-back"
+        aria-label="Back"
+    >
+        ‹
+    </a>
+
+
+    <!-- SOFT GLOW -->
+
+    <div class="header-glow"></div>
+
+
+    <!-- MAIN 3D BILL -->
+
+    <div class="header-bill-card"></div>
+
+
+    <!-- SMALL FLOATING CARD -->
+
+    <div class="header-mini-card"></div>
+
+
+    <!-- TEXT -->
+
+    <div class="header-content">
+
+        <div class="header-eyebrow">
+            YOUR PERSONAL SPACE
+        </div>
+
+        <div class="header-title-row">
+
+            <h1 class="header-main-title">
+                Your Bills
+            </h1>
+
+            <span
+                class="header-count"
+                id="headerBillCount"
+            >
+                0 Bills
+            </span>
+
+        </div>
+
+        <div class="header-subtitle">
+            Everything you've saved,
+            safely in one place.
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="page">
+
+
+    <!-- ===================================================
+         INTRO
+    ==================================================== -->
+
+    <section class="intro">
+
+        <div class="intro-small">
+            Your personal bill space
+        </div>
+
+        <div class="intro-row">
+
+            <h1>
+                Your Bills
+            </h1>
+
+            <div
+                class="bill-count"
+                id="billCount"
+            >
+                0 Bills
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         ERROR
+    ==================================================== -->
+
+    <div
+        id="errorBox"
+        class="error-box"
+    ></div>
+
+
+    <!-- ===================================================
+         SEARCH
+    ==================================================== -->
+
+    <div class="search-wrap">
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <input
+            type="search"
+            id="searchInput"
+            class="search"
+            placeholder="Search bills..."
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            class="filter-button"
+            aria-label="Filter"
+        >
+            ☰
+        </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         FILTER PILLS
+    ==================================================== -->
+
+    <div class="filter-row">
+
+        <div class="filter-pill active">
+
+            All
+
+            <span id="allFilterCount">
+                (0)
+            </span>
+
+        </div>
+
+        <div class="filter-pill">
+            This Month
+        </div>
+
+        <div class="filter-pill">
+            Others
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         BILL LIST
+    ==================================================== -->
+
+    <div id="billList">
+
+        <div class="loading">
+            Loading your bills...
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         EMPTY
+    ==================================================== -->
+
+    <div
+        id="emptyState"
+        class="empty"
+    >
+
+        <div class="empty-icon">
+            🧾
+        </div>
+
+        <h3>
+            No Bills Found
+        </h3>
+
+        <p>
+            Your saved bills will appear here.
+        </p>
+
+        <a
+            href="add-bill.html"
+            class="add-btn"
+        >
+            + Save Your First Bill
+        </a>
+
+    </div>
+
+
+</main>
+
+  <!-- =========================================================
+     3D FLOATING BOTTOM NAVIGATION
+========================================================= -->
+
+<nav class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <a
+        href="dashboard.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M3 10.5L12 3l9 7.5"></path>
+
+                <path d="M5.5 9.5V21h13V9.5"></path>
+
+                <path d="M9.5 21v-6h5v6"></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+            Home
+        </span>
+
+    </a>
+
+
+    <!-- BILLS -->
+
+    <a
+        href="my-bills.html"
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <rect
+                    x="5"
+                    y="3"
+                    width="14"
+                    height="18"
+                    rx="2"
+                ></rect>
+
+                <path d="M8 8h8"></path>
+
+                <path d="M8 12h8"></path>
+
+                <path d="M8 16h5"></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+            Bills
+        </span>
+
+    </a>
+
+
+    <!-- ADD -->
+
+    <a
+        href="add-bill.html"
+        class="nav-item nav-add"
+    >
+
+        <span class="nav-add-circle">
+            +
+        </span>
+
+        <span class="nav-add-label">
+            Add
+        </span>
+
+    </a>
+
+
+    <!-- INSIGHTS -->
+
+    <a
+        href="summary.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M5 20V10"></path>
+
+                <path d="M12 20V5"></path>
+
+                <path d="M19 20V8"></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+            Insights
+        </span>
+
+    </a>
+
+
+    <!-- ME -->
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                ></circle>
+
+                <path
+                    d="M5 21c.8-4 3-6 7-6s6.2 2 7 6"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>
+            Me
+        </span>
+
+    </a>
+
+</nav>
+
+
+<!-- =======================================================
+     JAVASCRIPT START
+======================================================= -->
+
+<script>
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const billList =
+    document.getElementById(
+        "billList"
+    );
+
+
+const emptyState =
+    document.getElementById(
+        "emptyState"
+    );
+
+
+const billCount =
+    document.getElementById(
+        "billCount"
+    );
+
+
+const allFilterCount =
+    document.getElementById(
+        "allFilterCount"
+    );
+
+
+const headerBillCount =
+    document.getElementById(
+        "headerBillCount"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const errorBox =
+    document.getElementById(
+        "errorBox"
+    );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let allBills = [];
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(
+    dateString
+){
+
+    if(!dateString){
+
+        return "-";
+
+    }
+
+
+    const parts =
+        dateString.split("-");
+
+
+    if(parts.length !== 3){
+
+        return dateString;
+
+    }
+
+
+    return (
+
+        parts[2] +
+        " " +
+        getMonthName(
+            Number(parts[1])
+        ) +
+        " " +
+        parts[0]
+
+    );
+
+}
+
+
+/* =========================================================
+   MONTH NAME
+========================================================= */
+
+function getMonthName(
+    month
+){
+
+    const months = [
+
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+
+    ];
+
+
+    return (
+
+        months[month - 1] ||
+        ""
+
+    );
+
+}
+
+
+/* =========================================================
+   HTML SAFETY
+========================================================= */
+
+function escapeHtml(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   SESSION CHECK
+========================================================= */
+
+async function checkSession(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if(error){
+
+            console.error(
+                "Session check error:",
+                error
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return null;
+
+        }
+
+
+        if(
+            !data ||
+            !data.session ||
+            !data.session.user
+        ){
+
+            window.location.href =
+                "login.html";
+
+
+            return null;
+
+        }
+
+
+        return data.session;
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            "Session check failed:",
+            error
+        );
+
+
+        window.location.href =
+            "login.html";
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+========================================================= */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        function(event){
+
+            if(
+                event ===
+                "SIGNED_OUT"
+            ){
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   LOAD BILLS
+========================================================= */
+
+async function loadBills(){
+
+    billList.innerHTML = `
+
+        <div class="loading">
+            Loading your bills...
+        </div>
+
+    `;
+
+
+    emptyState.style.display =
+        "none";
+
+
+    errorBox.style.display =
+        "none";
+
+
+    const session =
+        await checkSession();
+
+
+    if(!session){
+
+        return;
+
+    }
+
+
+    const user =
+        session.user;
+
+
+    /* =====================================================
+       EXISTING BILL QUERY
+    ===================================================== */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+
+            .from("bills")
+
+            .select(
+                `
+                id,
+                title,
+                shop_name,
+                bill_date,
+                total_amount,
+                category,
+                file_type,
+                file_path,
+                created_at
+                `
+            )
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .order(
+                "bill_date",
+                {
+                    ascending:false
+                }
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    if(error){
+
+        console.error(
+            "Load bills error:",
+            error
+        );
+
+
+        billList.innerHTML =
+            "";
+
+
+        errorBox.textContent =
+            "Unable to load your bills. Please try again.";
+
+
+        errorBox.style.display =
+            "block";
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       SAVE DATA
+    ===================================================== */
+
+    allBills =
+        data || [];
+
+
+    /* =====================================================
+       UPDATE COUNT
+    ===================================================== */
+
+    updateCount(
+        allBills.length
+    );
+
+
+    /* =====================================================
+       RENDER
+    ===================================================== */
+
+    renderBills();
+
+}
+
+
+/* =========================================================
+   COUNT
+========================================================= */
+
+function updateCount(
+    count
+){
+
+    const label =
+        count === 1
+            ? " Bill"
+            : " Bills";
+
+
+    billCount.textContent =
+        count + label;
+
+
+    allFilterCount.textContent =
+        "(" + count + ")";
+
+
+    if(headerBillCount){
+
+        headerBillCount.textContent =
+            count + label;
+
+    }
+
+}
+
+
+/* =========================================================
+   BILL ICON
+========================================================= */
+
+function getBillIcon(
+    bill
+){
+
+    const type =
+        String(
+            bill.file_type || ""
+        ).toLowerCase();
+
+
+    if(
+        type.includes("pdf")
+    ){
+
+        return "📄";
+
+    }
+
+
+    if(
+        type.startsWith("image/")
+    ){
+
+        return "🧾";
+
+    }
+
+
+    return "🧾";
+
+}
+
+
+/* =========================================================
+   CATEGORY ICON
+========================================================= */
+
+function getCategoryIcon(
+    bill
+){
+
+    const category =
+        String(
+            bill.category || ""
+        ).toLowerCase();
+
+
+    if(
+        category.includes("fuel") ||
+        category.includes("petrol")
+    ){
+
+        return "⛽";
+
+    }
+
+
+    if(
+        category.includes("food") ||
+        category.includes("cafe") ||
+        category.includes("restaurant")
+    ){
+
+        return "☕";
+
+    }
+
+
+    if(
+        category.includes("medical") ||
+        category.includes("pharmacy")
+    ){
+
+        return "💊";
+
+    }
+
+
+    if(
+        category.includes("electric")
+    ){
+
+        return "⚡";
+
+    }
+
+
+    if(
+        category.includes("shopping") ||
+        category.includes("grocery")
+    ){
+
+        return "🛒";
+
+    }
+
+
+    return getBillIcon(
+        bill
+    );
+
+}
+
+
+/* =========================================================
+   OPEN BILL DETAILS
+========================================================= */
+
+function openBill(
+    id
+){
+
+    if(!id){
+
+        alert(
+            "Unable to open this bill."
+        );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "bill-details.html?id=" +
+        encodeURIComponent(id);
+
+}
+
+  /* =========================================================
+   RENDER BILLS
+========================================================= */
+
+function renderBills(){
+
+    const search =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    /* =====================================================
+       SEARCH FILTER
+    ===================================================== */
+
+    const filtered =
+        allBills.filter(
+            function(bill){
+
+                if(!search){
+
+                    return true;
+
+                }
+
+
+                const title =
+                    String(
+                        bill.title || ""
+                    ).toLowerCase();
+
+
+                const shop =
+                    String(
+                        bill.shop_name || ""
+                    ).toLowerCase();
+
+
+                const category =
+                    String(
+                        bill.category || ""
+                    ).toLowerCase();
+
+
+                return (
+
+                    title.includes(search) ||
+
+                    shop.includes(search) ||
+
+                    category.includes(search)
+
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       CLEAR LIST
+    ===================================================== */
+
+    billList.innerHTML =
+        "";
+
+
+    /* =====================================================
+       NO RESULTS
+    ===================================================== */
+
+    if(
+        filtered.length === 0
+    ){
+
+        if(search){
+
+            billList.innerHTML = `
+
+                <div class="no-result">
+
+                    <div class="no-result-icon">
+                        🔎
+                    </div>
+
+                    <h3>
+                        No Bill Found
+                    </h3>
+
+                    <p>
+                        No bill matches
+                        "${escapeHtml(
+                            searchInput.value.trim()
+                        )}".
+                    </p>
+
+                </div>
+
+            `;
+
+
+            emptyState.style.display =
+                "none";
+
+        }
+
+
+        else{
+
+            emptyState.style.display =
+                "block";
+
+        }
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       HIDE EMPTY
+    ===================================================== */
+
+    emptyState.style.display =
+        "none";
+
+
+    /* =====================================================
+       CREATE BILL CARDS
+    ===================================================== */
+
+    filtered.forEach(
+        function(bill){
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "bill";
+
+
+            /* =============================================
+               OPEN BILL DETAILS
+            ============================================= */
+
+            item.addEventListener(
+                "click",
+                function(event){
+
+                    if(
+                        event.target.closest("a")
+                    ){
+
+                        return;
+
+                    }
+
+
+                    openBill(
+                        bill.id
+                    );
+
+                }
+            );
+
+
+            /* =============================================
+               SAFE TITLE FALLBACK
+            ============================================= */
+
+            const title =
+                bill.title &&
+                bill.title.trim()
+
+                    ? bill.title
+
+                    : (
+
+                        bill.shop_name ||
+
+                        "Untitled Bill"
+
+                    );
+
+
+            const shop =
+                bill.shop_name ||
+
+                "Shop not added";
+
+
+            const amount =
+                Number(
+                    bill.total_amount || 0
+                ).toFixed(2);
+
+
+            const icon =
+                getCategoryIcon(
+                    bill
+                );
+
+
+            /* =============================================
+               BILL CARD
+            ============================================= */
+
+            item.innerHTML = `
+
+                <div class="bill-icon">
+
+                    ${icon}
+
+                </div>
+
+
+                <div class="bill-info">
+
+                    <h3>
+
+                        ${escapeHtml(title)}
+
+                    </h3>
+
+
+                    <div class="shop-name">
+
+                        ${escapeHtml(shop)}
+
+                    </div>
+
+
+                    <div class="bill-date">
+
+                        ${formatDate(
+                            bill.bill_date
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="bill-right">
+
+                    <div class="amount">
+
+                        ₹${amount}
+
+                    </div>
+
+
+                    <a
+                        href="#"
+                        class="view"
+                        onclick="
+                            openBill('${bill.id}');
+                            return false;
+                        "
+                    >
+
+                        View
+
+                    </a>
+
+                </div>
+
+            `;
+
+
+            billList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+searchInput.addEventListener(
+    "input",
+    function(){
+
+        renderBills();
+
+    }
+);
+
+
+/* =========================================================
+   FILTER BUTTON
+========================================================= */
+
+const filterButton =
+    document.querySelector(
+        ".filter-button"
+    );
+
+
+if(filterButton){
+
+    filterButton.addEventListener(
+        "click",
+        function(){
+
+            /*
+               Existing filter UI is visual only.
+               No existing bill filtering logic is changed.
+            */
+
+            filterButton.blur();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadBills();
+
+  </script>
+
+</body>
+
+</html>

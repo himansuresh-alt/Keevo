@@ -1,0 +1,3437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>Your Insights</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    background:#f7f7f6;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:#f7f7f6;
+
+    color:#171717;
+
+    padding-bottom:90px;
+
+    -webkit-font-smoothing:antialiased;
+}
+
+/* =========================================================
+   3D PERSONAL INSIGHTS HEADER
+   SAME MASTER DESIGN AS MY-BILLS
+========================================================= */
+
+.top-header{
+
+    width:100%;
+    max-width:620px;
+
+    height:245px;
+
+    margin:0 auto;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:0;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(255,255,255,.95) 0%,
+            rgba(255,255,255,.35) 18%,
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #ff6b35 0%,
+            #ff7040 42%,
+            #ff9a6f 100%
+        );
+
+    border-radius:
+        0 0 34px 34px;
+
+    box-shadow:
+        0 18px 38px
+        rgba(255,107,53,.18);
+
+    perspective:1000px;
+
+    isolation:isolate;
+}
+
+
+/* =========================================================
+   SOFT 3D LIGHT
+========================================================= */
+
+.top-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    right:-90px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.20);
+
+    filter:blur(2px);
+
+    animation:
+        headerFloat 5s ease-in-out infinite;
+
+    z-index:0;
+}
+
+
+.top-header::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    left:-80px;
+    bottom:-105px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.10);
+
+    animation:
+        headerFloat2 6s ease-in-out infinite;
+
+    z-index:0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.header-back{
+
+    position:absolute;
+
+    left:17px;
+    top:17px;
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    color:#ffffff;
+
+    font-size:32px;
+
+    font-weight:300;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.16);
+
+    border:
+        1px solid
+        rgba(255,255,255,.22);
+
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+
+    z-index:10;
+
+    transition:
+        transform .18s ease;
+}
+
+
+.header-back:active{
+
+    transform:scale(.92);
+}
+
+
+/* =========================================================
+   MAIN 3D BILL SHAPE
+========================================================= */
+
+.header-bill-card{
+
+    position:absolute;
+
+    width:255px;
+    height:175px;
+
+    right:-45px;
+    top:38px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.30),
+            rgba(255,255,255,.08)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.30);
+
+    transform:
+        rotate(-10deg)
+        translateZ(20px);
+
+    box-shadow:
+        0 25px 40px
+        rgba(160,45,15,.13),
+
+        inset 0 1px 0
+        rgba(255,255,255,.30);
+
+    z-index:1;
+}
+
+
+/* =========================================================
+   SMALL FLOATING CARD
+========================================================= */
+
+.header-mini-card{
+
+    position:absolute;
+
+    width:105px;
+    height:72px;
+
+    right:34px;
+    top:117px;
+
+    border-radius:17px;
+
+    background:
+        rgba(255,255,255,.20);
+
+    border:
+        1px solid
+        rgba(255,255,255,.30);
+
+    transform:
+        rotate(8deg);
+
+    box-shadow:
+        0 15px 25px
+        rgba(150,40,10,.12),
+
+        inset 0 1px 0
+        rgba(255,255,255,.28);
+
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+
+    z-index:3;
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+========================================================= */
+
+.header-content{
+
+    position:absolute;
+
+    left:24px;
+    right:24px;
+    bottom:27px;
+
+    z-index:8;
+
+    color:#ffffff;
+}
+
+
+.header-eyebrow{
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:1.8px;
+
+    opacity:.78;
+
+    margin-bottom:8px;
+}
+
+
+.header-title-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    flex-wrap:wrap;
+}
+
+
+.header-main-title{
+
+    font-size:31px;
+
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+}
+
+
+.header-count{
+
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-width:58px;
+    height:30px;
+
+    padding:0 11px;
+
+    border-radius:18px;
+
+    background:
+        rgba(255,255,255,.22);
+
+    border:
+        1px solid
+        rgba(255,255,255,.38);
+
+    color:#ffffff;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    box-shadow:
+        0 5px 14px
+        rgba(120,35,10,.10),
+
+        inset 0 1px 0
+        rgba(255,255,255,.30);
+
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+}
+
+
+.header-subtitle{
+
+    margin-top:9px;
+
+    max-width:300px;
+
+    color:
+        rgba(255,255,255,.88);
+
+    font-size:12px;
+
+    line-height:1.45;
+
+    font-weight:500;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-badge{
+
+    position:absolute;
+
+    right:18px;
+    top:17px;
+
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        rgba(255,255,255,.20);
+
+    border:
+        1px solid
+        rgba(255,255,255,.32);
+
+    color:#ffffff;
+
+    font-size:15px;
+
+    font-weight:850;
+
+    backdrop-filter:blur(9px);
+    -webkit-backdrop-filter:blur(9px);
+
+    box-shadow:
+        0 6px 15px
+        rgba(100,30,10,.10),
+
+        inset 0 1px 0
+        rgba(255,255,255,.30);
+
+    z-index:10;
+}
+
+
+/* =========================================================
+   HEADER ANIMATION
+========================================================= */
+
+@keyframes headerFloat{
+
+    0%,100%{
+        transform:
+            translate3d(0,0,0)
+            scale(1);
+    }
+
+    50%{
+        transform:
+            translate3d(-10px,8px,0)
+            scale(1.04);
+    }
+}
+
+
+@keyframes headerFloat2{
+
+    0%,100%{
+        transform:
+            translate3d(0,0,0);
+    }
+
+    50%{
+        transform:
+            translate3d(12px,-7px,0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:480px){
+
+    .top-header{
+
+        height:225px;
+
+        border-radius:
+            0 0 30px 30px;
+    }
+
+    .header-content{
+
+        left:22px;
+        right:22px;
+        bottom:25px;
+    }
+
+    .header-main-title{
+
+        font-size:29px;
+    }
+
+    .header-subtitle{
+
+        font-size:11.5px;
+    }
+
+    .header-bill-card{
+
+        width:225px;
+        height:155px;
+
+        right:-50px;
+        top:37px;
+    }
+
+    .header-mini-card{
+
+        right:25px;
+        top:112px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media(max-width:360px){
+
+    .top-header{
+
+        height:215px;
+    }
+
+    .header-bill-card{
+
+        width:205px;
+        height:142px;
+
+        right:-55px;
+    }
+
+    .header-mini-card{
+
+        right:20px;
+        top:106px;
+    }
+
+    .header-content{
+
+        left:19px;
+        right:19px;
+        bottom:22px;
+    }
+
+    .header-main-title{
+
+        font-size:27px;
+    }
+}
+  
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+
+    width:100%;
+
+    max-width:620px;
+
+    margin:0 auto;
+
+    padding:
+        18px 18px 35px;
+}
+
+
+/* =========================================================
+   FILTER ROW
+========================================================= */
+
+.filter-row{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
+    margin-bottom:15px;
+}
+
+.filter-select{
+
+    height:43px;
+
+    background:#ffffff;
+
+    border:
+        1px solid #e9e9e9;
+
+    border-radius:14px;
+
+    padding:
+        0 13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    color:#252525;
+
+    font-size:12px;
+
+    font-weight:650;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,.025);
+}
+
+.filter-arrow{
+
+    color:#777;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   PERIOD BUTTONS
+========================================================= */
+
+.periods{
+
+    display:flex;
+
+    gap:8px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+
+    margin-bottom:15px;
+
+    padding:
+        1px 1px 3px;
+}
+
+.periods::-webkit-scrollbar{
+    display:none;
+}
+
+.period{
+
+    flex-shrink:0;
+
+    border:
+        1px solid #e5e5e5;
+
+    background:#ffffff;
+
+    color:#666;
+
+    padding:
+        9px 14px;
+
+    border-radius:13px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.period.active{
+
+    background:#ff6538;
+
+    color:#ffffff;
+
+    border-color:#ff6538;
+
+    box-shadow:
+        0 5px 12px
+        rgba(255,101,56,.15);
+}
+
+
+/* =========================================================
+   CUSTOM DATE
+========================================================= */
+
+.custom-box{
+
+    display:none;
+
+    background:#ffffff;
+
+    padding:15px;
+
+    border-radius:17px;
+
+    margin-bottom:15px;
+
+    border:
+        1px solid #eeeeee;
+}
+
+.custom-box.show{
+    display:block;
+}
+
+.date-row{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+}
+
+.date-group label{
+
+    display:block;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    margin-bottom:6px;
+}
+
+.date-group input{
+
+    width:100%;
+
+    height:40px;
+
+    border:
+        1px solid #dddddd;
+
+    border-radius:10px;
+
+    padding:
+        0 9px;
+
+    outline:none;
+
+    font-size:12px;
+}
+
+.date-group input:focus{
+
+    border-color:#ff6538;
+}
+
+.apply-btn{
+
+    width:100%;
+
+    height:42px;
+
+    margin-top:11px;
+
+    border:none;
+
+    border-radius:11px;
+
+    background:#ff6538;
+
+    color:#ffffff;
+
+    font-size:12px;
+
+    font-weight:750;
+}
+
+
+/* =========================================================
+   TOTAL SPENDING CARD
+========================================================= */
+
+.total-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff7f1 0%,
+            #fff1e9 100%
+        );
+
+    border:
+        1px solid #f7ddd0;
+
+    border-radius:22px;
+
+    padding:
+        20px;
+
+    margin-bottom:14px;
+
+    min-height:143px;
+}
+
+.total-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:145px;
+    height:145px;
+
+    border-radius:50%;
+
+    right:-68px;
+
+    top:-70px;
+
+    background:
+        rgba(255,255,255,.65);
+}
+
+.total-label{
+
+    color:#777;
+
+    font-size:12px;
+
+    margin-bottom:6px;
+}
+
+.total-main{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+}
+
+.total-value{
+
+    font-size:29px;
+
+    line-height:1;
+
+    font-weight:850;
+
+    letter-spacing:-1px;
+}
+
+.total-period{
+
+    color:#888;
+
+    font-size:11px;
+
+    margin-top:8px;
+}
+
+.total-mini{
+
+    width:43px;
+    height:43px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#20a463;
+
+    font-size:20px;
+
+    flex-shrink:0;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:11px;
+
+    margin-bottom:15px;
+}
+
+.stat{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:17px;
+
+    padding:
+        16px;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.035);
+}
+
+.stat-title{
+
+    color:#888;
+
+    font-size:11px;
+
+    margin-bottom:7px;
+}
+
+.stat-value{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    letter-spacing:-.3px;
+}
+
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.category-card{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    border-radius:20px;
+
+    padding:
+        19px 16px;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.035);
+
+    margin-bottom:15px;
+}
+
+.category-head{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:18px;
+}
+
+.category-head h2{
+
+    font-size:17px;
+
+    font-weight:800;
+
+    letter-spacing:-.3px;
+}
+
+.category-count{
+
+    color:#999;
+
+    font-size:11px;
+}
+
+
+/* =========================================================
+   CHART AREA
+========================================================= */
+
+.chart-area{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:
+        2px 0 19px;
+}
+
+.donut{
+
+    width:142px;
+    height:142px;
+
+    border-radius:50%;
+
+    background:
+        conic-gradient(
+            #ff713f 0deg,
+            #ff713f 0deg,
+            #f1f1f1 0deg,
+            #f1f1f1 360deg
+        );
+
+    position:relative;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+.donut::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:91px;
+    height:91px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+}
+
+.donut-center{
+
+    position:relative;
+
+    z-index:2;
+
+    text-align:center;
+
+    max-width:88px;
+}
+
+.donut-total{
+
+    font-size:15px;
+
+    font-weight:850;
+
+    line-height:1.1;
+}
+
+.donut-count{
+
+    color:#999;
+
+    font-size:9px;
+
+    margin-top:4px;
+}
+
+.legend{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:9px;
+}
+
+.legend-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    min-width:0;
+}
+
+.legend-dot{
+
+    width:9px;
+    height:9px;
+
+    border-radius:50%;
+
+    flex-shrink:0;
+}
+
+.legend-name{
+
+    flex:1;
+
+    min-width:0;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+    font-size:11px;
+
+    color:#555;
+}
+
+.legend-percent{
+
+    font-size:11px;
+
+    font-weight:750;
+}
+
+
+/* =========================================================
+   CATEGORY DETAILS
+========================================================= */
+
+.details-title{
+
+    font-size:14px;
+
+    font-weight:800;
+
+    margin-bottom:14px;
+}
+
+.category-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:
+        11px 0;
+
+    border-bottom:
+        1px solid #f0f0f0;
+}
+
+.category-row:last-child{
+    border-bottom:none;
+}
+
+.category-icon{
+
+    width:39px;
+    height:39px;
+
+    border-radius:13px;
+
+    background:#fff2ea;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+
+    flex-shrink:0;
+}
+
+.category-info{
+
+    flex:1;
+
+    min-width:0;
+}
+
+.category-name{
+
+    font-size:12px;
+
+    font-weight:750;
+
+    margin-bottom:3px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.category-meta{
+
+    color:#999;
+
+    font-size:10px;
+}
+
+.category-money{
+
+    text-align:right;
+
+    flex-shrink:0;
+}
+
+.category-amount{
+
+    font-size:12px;
+
+    font-weight:800;
+
+    margin-bottom:5px;
+}
+
+.category-percent{
+
+    font-size:9px;
+
+    color:#999;
+}
+
+.category-progress{
+
+    width:70px;
+
+    height:5px;
+
+    background:#ededed;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+.category-progress-fill{
+
+    height:100%;
+
+    background:#ff6538;
+
+    border-radius:20px;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+
+    background:#ffffff;
+
+    border:
+        1px solid #eeeeee;
+
+    color:#888;
+
+    padding:
+        13px 14px;
+
+    border-radius:13px;
+
+    font-size:11px;
+
+    line-height:1.5;
+
+    margin-bottom:15px;
+}
+
+
+/* =========================================================
+   EMPTY / ERROR / LOADING
+========================================================= */
+
+.loading{
+
+    text-align:center;
+
+    padding:28px 10px;
+
+    color:#999;
+
+    font-size:12px;
+}
+
+.empty{
+
+    text-align:center;
+
+    padding:30px 10px;
+
+    color:#999;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+.error{
+
+    display:none;
+
+    background:#fff1f1;
+
+    color:#c62828;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    margin-bottom:15px;
+
+    font-size:12px;
+}
+
+
+  /* =========================================
+   3D FLOATING BOTTOM NAVIGATION
+========================================= */
+
+.bottom-nav{
+    position:fixed;
+
+    left:14px;
+    right:14px;
+    bottom:12px;
+
+    height:70px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f3f3f3
+        );
+
+    border:1px solid rgba(255,255,255,.95);
+
+    border-radius:26px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+
+    padding:5px 5px 6px;
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.12),
+        0 4px 10px rgba(0,0,0,.06),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -2px 5px rgba(0,0,0,.035);
+
+    z-index:1000;
+}
+
+
+/* NAV ITEM */
+
+.nav-item{
+    width:20%;
+    height:58px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:3px;
+
+    text-decoration:none;
+
+    color:#888;
+
+    font-size:10px;
+    font-weight:600;
+
+    border-radius:18px;
+
+    transition:
+        transform .18s ease,
+        color .18s ease;
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+
+/* ACTIVE NORMAL ITEM */
+
+.nav-item.active{
+    color:#FF6B35;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff7f2,
+            #ffffff
+        );
+
+    box-shadow:
+        inset 0 2px 4px rgba(255,107,53,.08),
+        0 3px 8px rgba(0,0,0,.04);
+}
+
+
+/* ICON */
+
+.nav-icon{
+    width:25px;
+    height:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:inherit;
+}
+
+
+.nav-icon svg{
+    width:20px;
+    height:20px;
+
+    fill:none;
+
+    stroke:currentColor;
+
+    stroke-width:2;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+/* =========================================
+   CENTER 3D ADD BUTTON
+========================================= */
+
+.nav-add{
+    position:relative;
+
+    margin-top:-27px;
+
+    height:70px;
+
+    z-index:5;
+
+    background:transparent !important;
+    box-shadow:none !important;
+}
+
+
+/* ORANGE 3D CIRCLE */
+
+.nav-add-circle{
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#ffffff;
+
+    font-size:30px;
+    font-weight:300;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff7040,
+            #f4511e
+        );
+
+    border:4px solid #ffffff;
+
+    box-shadow:
+        0 12px 22px rgba(255,107,53,.32),
+        0 5px 10px rgba(0,0,0,.14),
+        inset 0 2px 3px rgba(255,255,255,.38),
+        inset 0 -5px 6px rgba(180,50,10,.20);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.nav-add-label{
+    margin-top:3px;
+
+    color:#777;
+
+    font-size:10px;
+    font-weight:600;
+}
+
+
+/* PRESS EFFECT */
+
+.nav-item:active{
+    transform:
+        translateY(2px)
+        scale(.96);
+}
+
+
+.nav-add:active .nav-add-circle{
+    transform:
+        translateY(3px)
+        scale(.94);
+
+    box-shadow:
+        0 5px 10px rgba(255,107,53,.22),
+        inset 0 3px 5px rgba(120,40,10,.18);
+}
+
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+    .bottom-nav{
+        left:12px;
+        right:12px;
+        bottom:10px;
+
+        height:70px;
+
+        border-radius:25px;
+    }
+
+    .nav-add-circle{
+        width:58px;
+        height:58px;
+    }
+
+}
+
+
+@media(max-width:360px){
+
+    .bottom-nav{
+        left:9px;
+        right:9px;
+    }
+
+    .nav-item{
+        font-size:9px;
+    }
+
+    .nav-add-circle{
+        width:54px;
+        height:54px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     3D PERSONAL INSIGHTS HEADER
+===================================================== -->
+
+<header class="top-header">
+
+    <!-- BACK -->
+
+    <a
+        href="dashboard.html"
+        class="header-back"
+        aria-label="Back"
+    >
+        ‹
+    </a>
+
+
+    <!-- SOFT 3D BILL -->
+
+    <div class="header-bill-card"></div>
+
+
+    <!-- SMALL FLOATING CARD -->
+
+    <div class="header-mini-card"></div>
+
+
+    <!-- PROFILE -->
+
+    <div
+        class="profile-badge"
+        id="profileBadge"
+    >
+        S
+    </div>
+
+
+    <!-- HEADER TEXT -->
+
+    <div class="header-content">
+
+        <div class="header-eyebrow">
+            YOUR PERSONAL SPACE
+        </div>
+
+
+        <div class="header-title-row">
+
+            <h1 class="header-main-title">
+                Your Insights
+            </h1>
+
+            <span class="header-count">
+                Insights
+            </span>
+
+        </div>
+
+
+        <div class="header-subtitle">
+            Understand your spending,
+            simply and clearly.
+        </div>
+
+    </div>
+
+</header>
+  
+<main class="page">
+
+    <div class="filter-row">
+
+        <div class="filter-select">
+            <span id="periodLabel">
+                This Month
+            </span>
+            <span class="filter-arrow">
+                ▾
+            </span>
+        </div>
+
+        <div class="filter-select">
+            <span>
+                All Categories
+            </span>
+            <span class="filter-arrow">
+                ▾
+            </span>
+        </div>
+
+    </div>
+
+    <div class="periods">
+
+        <button
+            class="period"
+            data-period="yesterday"
+        >
+            Yesterday
+        </button>
+
+        <button
+            class="period"
+            data-period="today"
+        >
+            Today
+        </button>
+
+        <button
+            class="period"
+            data-period="7days"
+        >
+            Last 7 Days
+        </button>
+
+        <button
+            class="period active"
+            data-period="30days"
+        >
+            Last 30 Days
+        </button>
+
+        <button
+            class="period"
+            data-period="custom"
+        >
+            Custom
+        </button>
+
+    </div>
+
+    <div
+        id="customBox"
+        class="custom-box"
+    >
+
+        <div class="date-row">
+
+            <div class="date-group">
+
+                <label>
+                    Start Date
+                </label>
+
+                <input
+                    type="date"
+                    id="startDate"
+                >
+
+            </div>
+
+            <div class="date-group">
+
+                <label>
+                    End Date
+                </label>
+
+                <input
+                    type="date"
+                    id="endDate"
+                >
+
+            </div>
+
+        </div>
+
+        <button
+            class="apply-btn"
+            id="applyButton"
+        >
+            Apply Date Range
+        </button>
+
+    </div>
+
+    <div
+        id="errorBox"
+        class="error"
+    ></div>
+
+    <section class="total-card">
+
+        <div class="total-label">
+            Total Spending
+        </div>
+
+        <div class="total-main">
+
+            <div>
+
+                <div
+                    class="total-value"
+                    id="totalExpense"
+                >
+                    ₹0.00
+                </div>
+
+                <div
+                    class="total-period"
+                    id="totalPeriodText"
+                >
+                    Selected period
+                </div>
+
+            </div>
+
+            <div class="total-mini">
+                ↓
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Expenses
+            </div>
+
+            <div
+                class="stat-value"
+                id="expenseCount"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Average Expense
+            </div>
+
+            <div
+                class="stat-value"
+                id="averageExpense"
+            >
+                ₹0.00
+            </div>
+
+        </div>
+
+    </div>
+
+    <section class="category-card">
+
+        <div class="category-head">
+
+            <h2>
+                Spending Breakdown
+            </h2>
+
+            <span
+                class="category-count"
+                id="categoryCount"
+            >
+                0 categories
+            </span>
+
+        </div>
+
+        <div class="chart-area">
+
+            <div
+                class="donut"
+                id="donutChart"
+            >
+
+                <div class="donut-center">
+
+                    <div
+                        class="donut-total"
+                        id="donutTotal"
+                    >
+                        ₹0
+                    </div>
+
+                    <div
+                        class="donut-count"
+                        id="donutCount"
+                    >
+                        0 expenses
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                class="legend"
+                id="legend"
+            >
+            </div>
+
+        </div>
+
+        <div class="details-title">
+            Category Details
+        </div>
+
+        <div id="categoryList">
+
+            <div class="loading">
+                Loading your insights...
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="info">
+
+        💡 Your insights are calculated from
+        <b>My Expenses</b> only.
+        Saved bills remain storage-only.
+
+    </div>
+
+</main>
+
+  <!-- =========================================
+     FIXED BOTTOM NAVIGATION
+========================================= -->
+
+<nav class="bottom-nav">
+
+    <!-- HOME -->
+
+    <a
+        href="dashboard.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M3 10.5L12 3l9 7.5"></path>
+
+                <path d="M5.5 9.5V21h13V9.5"></path>
+
+                <path d="M9.5 21v-6h5v6"></path>
+
+            </svg>
+
+        </span>
+
+        <span>Home</span>
+
+    </a>
+
+
+    <!-- BILLS -->
+
+    <a
+        href="my-bills.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <rect
+                    x="5"
+                    y="3"
+                    width="14"
+                    height="18"
+                    rx="2"
+                ></rect>
+
+                <path d="M8 8h8"></path>
+
+                <path d="M8 12h8"></path>
+
+                <path d="M8 16h5"></path>
+
+            </svg>
+
+        </span>
+
+        <span>Bills</span>
+
+    </a>
+
+
+    <!-- ADD -->
+
+    <a
+        href="add-bill.html"
+        class="nav-item nav-add"
+    >
+
+        <span class="nav-add-circle">
+            +
+        </span>
+
+        <span class="nav-add-label">
+            Add
+        </span>
+
+    </a>
+
+
+    <!-- INSIGHTS — ACTIVE -->
+
+    <a
+        href="summary.html"
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M5 20V10"></path>
+
+                <path d="M12 20V5"></path>
+
+                <path d="M19 20V8"></path>
+
+            </svg>
+
+        </span>
+
+        <span>Insights</span>
+
+    </a>
+
+
+    <!-- ME -->
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                ></circle>
+
+                <path
+                    d="M5 21c.8-4 3-6 7-6s6.2 2 7 6"
+                ></path>
+
+            </svg>
+
+        </span>
+
+        <span>Me</span>
+
+    </a>
+
+</nav>
+
+  <script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const totalExpense =
+    document.getElementById(
+        "totalExpense"
+    );
+
+const expenseCount =
+    document.getElementById(
+        "expenseCount"
+    );
+
+const averageExpense =
+    document.getElementById(
+        "averageExpense"
+    );
+
+const categoryList =
+    document.getElementById(
+        "categoryList"
+    );
+
+const customBox =
+    document.getElementById(
+        "customBox"
+    );
+
+const startDate =
+    document.getElementById(
+        "startDate"
+    );
+
+const endDate =
+    document.getElementById(
+        "endDate"
+    );
+
+const applyButton =
+    document.getElementById(
+        "applyButton"
+    );
+
+const errorBox =
+    document.getElementById(
+        "errorBox"
+    );
+
+const donutChart =
+    document.getElementById(
+        "donutChart"
+    );
+
+const donutTotal =
+    document.getElementById(
+        "donutTotal"
+    );
+
+const donutCount =
+    document.getElementById(
+        "donutCount"
+    );
+
+const legend =
+    document.getElementById(
+        "legend"
+    );
+
+const categoryCount =
+    document.getElementById(
+        "categoryCount"
+    );
+
+const periodLabel =
+    document.getElementById(
+        "periodLabel"
+    );
+
+const totalPeriodText =
+    document.getElementById(
+        "totalPeriodText"
+    );
+
+const profileBadge =
+    document.getElementById(
+        "profileBadge"
+    );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let allExpenses = [];
+
+let selectedPeriod =
+    "30days";
+
+
+/* =========================================================
+   CHART COLORS
+========================================================= */
+
+const chartColors = [
+
+    "#ff713f",
+    "#ff9b76",
+    "#4b91e8",
+    "#8d62d9",
+    "#a9afb5",
+    "#48ad83",
+    "#f3bd55",
+    "#df6b8d"
+
+];
+
+
+/* =========================================================
+   MONEY
+========================================================= */
+
+function formatMoney(
+    value
+){
+
+    return "₹" +
+        Number(
+            value || 0
+        ).toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            }
+        );
+
+}
+
+
+/* =========================================================
+   SHORT MONEY
+========================================================= */
+
+function formatShortMoney(
+    value
+){
+
+    const number =
+        Number(value || 0);
+
+    if(number >= 100000){
+
+        return "₹" +
+            (
+                number / 100000
+            ).toFixed(1) +
+            "L";
+
+    }
+
+    if(number >= 1000){
+
+        return "₹" +
+            (
+                number / 1000
+            ).toFixed(1) +
+            "K";
+
+    }
+
+    return "₹" +
+        Math.round(number);
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function toDateString(
+    date
+){
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(
+    message
+){
+
+    errorBox.textContent =
+        message;
+
+    errorBox.style.display =
+        "block";
+
+}
+
+
+function hideError(){
+
+    errorBox.textContent =
+        "";
+
+    errorBox.style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function loadProfile(){
+
+    try{
+
+        const {
+            data
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+        if(
+            !data ||
+            !data.session ||
+            !data.session.user
+        ){
+
+            return;
+
+        }
+
+        const user =
+            data.session.user;
+
+        let name = "";
+
+        if(
+            user.user_metadata &&
+            user.user_metadata.full_name
+        ){
+
+            name =
+                user.user_metadata.full_name;
+
+        }
+
+        if(!name){
+
+            name =
+                user.email || "";
+
+        }
+
+        name =
+            String(name).trim();
+
+        if(name){
+
+            profileBadge.textContent =
+                name
+                    .charAt(0)
+                    .toUpperCase();
+
+        }
+
+    }
+    catch(error){
+
+        console.log(
+            "Profile load skipped"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SESSION + LOAD
+========================================================= */
+
+async function loadExpenses(){
+
+    categoryList.innerHTML = `
+
+        <div class="loading">
+            Loading your insights...
+        </div>
+
+    `;
+
+    hideError();
+
+    const {
+        data:sessionData,
+        error:sessionError
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+    if(
+        sessionError ||
+        !sessionData ||
+        !sessionData.session
+    ){
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+    const user =
+        sessionData.session.user;
+
+
+    /* =====================================================
+       EXISTING SOURCE — DAILY EXPENSES ONLY
+    ===================================================== */
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+
+            .from("daily_expenses")
+
+            .select(
+                "id,expense_date,category,description,amount"
+            )
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .order(
+                "expense_date",
+                {
+                    ascending:false
+                }
+            );
+
+
+    if(error){
+
+        console.error(
+            "Expense summary error:",
+            error
+        );
+
+        showError(
+            "Unable to load your insights. Please try again."
+        );
+
+        categoryList.innerHTML = `
+
+            <div class="empty">
+                Unable to load expenses.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    allExpenses =
+        data || [];
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   DATE RANGE
+========================================================= */
+
+function getDateRange(){
+
+    const today =
+        new Date();
+
+    const todayString =
+        toDateString(
+            today
+        );
+
+
+    if(
+        selectedPeriod ===
+        "yesterday"
+    ){
+
+        const yesterday =
+            new Date(
+                today
+            );
+
+        yesterday.setDate(
+            yesterday.getDate() - 1
+        );
+
+        const date =
+            toDateString(
+                yesterday
+            );
+
+        return {
+            start:date,
+            end:date
+        };
+
+    }
+
+
+    if(
+        selectedPeriod ===
+        "today"
+    ){
+
+        return {
+
+            start:
+                todayString,
+
+            end:
+                todayString
+
+        };
+
+    }
+
+
+    if(
+        selectedPeriod ===
+        "7days"
+    ){
+
+        const start =
+            new Date(
+                today
+            );
+
+        start.setDate(
+            start.getDate() - 6
+        );
+
+        return {
+
+            start:
+                toDateString(
+                    start
+                ),
+
+            end:
+                todayString
+
+        };
+
+    }
+
+
+    if(
+        selectedPeriod ===
+        "30days"
+    ){
+
+        const start =
+            new Date(
+                today
+            );
+
+        start.setDate(
+            start.getDate() - 29
+        );
+
+        return {
+
+            start:
+                toDateString(
+                    start
+                ),
+
+            end:
+                todayString
+
+        };
+
+    }
+
+
+    return {
+
+        start:
+            startDate.value,
+
+        end:
+            endDate.value
+
+    };
+
+}
+
+
+/* =========================================================
+   PERIOD LABEL
+========================================================= */
+
+function updatePeriodLabels(){
+
+    const labels = {
+
+        yesterday:
+            "Yesterday",
+
+        today:
+            "Today",
+
+        "7days":
+            "Last 7 Days",
+
+        "30days":
+            "Last 30 Days",
+
+        custom:
+            "Custom Range"
+
+    };
+
+    const label =
+        labels[selectedPeriod] ||
+        "This Month";
+
+    periodLabel.textContent =
+        label;
+
+    totalPeriodText.textContent =
+        label;
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredExpenses(){
+
+    const range =
+        getDateRange();
+
+    if(
+        !range.start ||
+        !range.end
+    ){
+
+        return [];
+
+    }
+
+    return allExpenses.filter(
+        function(expense){
+
+            if(
+                !expense.expense_date
+            ){
+
+                return false;
+
+            }
+
+            return (
+
+                expense.expense_date >=
+                range.start
+
+                &&
+
+                expense.expense_date <=
+                range.end
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+function updateSummary(){
+
+    const expenses =
+        getFilteredExpenses();
+
+    let total = 0;
+
+    expenses.forEach(
+        function(expense){
+
+            total +=
+                Number(
+                    expense.amount || 0
+                );
+
+        }
+    );
+
+    const count =
+        expenses.length;
+
+    const average =
+        count > 0
+            ? total / count
+            : 0;
+
+
+    totalExpense.textContent =
+        formatMoney(total);
+
+    expenseCount.textContent =
+        count;
+
+    averageExpense.textContent =
+        formatMoney(average);
+
+    donutTotal.textContent =
+        formatShortMoney(total);
+
+    donutCount.textContent =
+        count +
+        (
+            count === 1
+                ? " expense"
+                : " expenses"
+        );
+
+    renderCategories(
+        expenses,
+        total
+    );
+
+}
+
+    /* =========================================================
+   CATEGORY DATA
+========================================================= */
+
+function buildCategories(
+    expenses
+){
+
+    const categories = {};
+
+    expenses.forEach(
+        function(expense){
+
+            const name =
+                String(
+                    expense.category ||
+                    "Other"
+                ).trim();
+
+            const safeName =
+                name ||
+                "Other";
+
+            const amount =
+                Number(
+                    expense.amount || 0
+                );
+
+            if(
+                !categories[safeName]
+            ){
+
+                categories[safeName] =
+                    {
+                        amount:0,
+                        count:0
+                    };
+
+            }
+
+            categories[safeName].amount +=
+                amount;
+
+            categories[safeName].count +=
+                1;
+
+        }
+    );
+
+    return Object.entries(
+        categories
+    ).sort(
+        function(a,b){
+
+            return (
+                b[1].amount -
+                a[1].amount
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CATEGORY ICON
+========================================================= */
+
+function getCategoryIcon(
+    name
+){
+
+    const value =
+        String(
+            name || ""
+        ).toLowerCase();
+
+    if(
+        value.includes("food") ||
+        value.includes("tea") ||
+        value.includes("lunch")
+    ){
+
+        return "🍴";
+
+    }
+
+    if(
+        value.includes("fuel") ||
+        value.includes("petrol")
+    ){
+
+        return "⛽";
+
+    }
+
+    if(
+        value.includes("grocery") ||
+        value.includes("vegetable") ||
+        value.includes("shopping")
+    ){
+
+        return "🥬";
+
+    }
+
+    if(
+        value.includes("travel") ||
+        value.includes("transport")
+    ){
+
+        return "🚕";
+
+    }
+
+    if(
+        value.includes("bill") ||
+        value.includes("electric")
+    ){
+
+        return "⚡";
+
+    }
+
+    if(
+        value.includes("medical") ||
+        value.includes("health")
+    ){
+
+        return "💊";
+
+    }
+
+    return "🧾";
+
+}
+
+
+/* =========================================================
+   DONUT
+========================================================= */
+
+function renderDonut(
+    entries,
+    total
+){
+
+    if(
+        !entries.length ||
+        total <= 0
+    ){
+
+        donutChart.style.background =
+            "#eeeeee";
+
+        legend.innerHTML =
+            "";
+
+        return;
+
+    }
+
+
+    let currentDegree =
+        0;
+
+    const parts = [];
+
+
+    entries.forEach(
+        function(entry,index){
+
+            const amount =
+                entry[1].amount;
+
+            const percentage =
+                (
+                    amount /
+                    total
+                ) * 100;
+
+            const degree =
+                (
+                    percentage /
+                    100
+                ) * 360;
+
+            const color =
+                chartColors[
+                    index %
+                    chartColors.length
+                ];
+
+            parts.push(
+
+                color +
+                " " +
+                currentDegree +
+                "deg " +
+                (
+                    currentDegree +
+                    degree
+                ) +
+                "deg"
+
+            );
+
+            currentDegree +=
+                degree;
+
+        }
+    );
+
+
+    donutChart.style.background =
+        "conic-gradient(" +
+        parts.join(",") +
+        ")";
+
+
+    legend.innerHTML =
+        "";
+
+
+    entries
+        .slice(0,5)
+        .forEach(
+            function(entry,index){
+
+                const name =
+                    entry[0];
+
+                const amount =
+                    entry[1].amount;
+
+                const percentage =
+                    total > 0
+                        ? (
+                            amount /
+                            total
+                        ) * 100
+                        : 0;
+
+                const color =
+                    chartColors[
+                        index %
+                        chartColors.length
+                    ];
+
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+                item.className =
+                    "legend-item";
+
+
+                item.innerHTML = `
+
+                    <span
+                        class="legend-dot"
+                        style="
+                            background:${color};
+                        "
+                    ></span>
+
+                    <span class="legend-name">
+                        ${escapeHtml(name)}
+                    </span>
+
+                    <span class="legend-percent">
+                        ${Math.round(
+                            percentage
+                        )}%
+                    </span>
+
+                `;
+
+
+                legend.appendChild(
+                    item
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   CATEGORY DETAILS
+========================================================= */
+
+function renderCategories(
+    expenses,
+    total
+){
+
+    const entries =
+        buildCategories(
+            expenses
+        );
+
+
+    categoryCount.textContent =
+
+        entries.length +
+
+        (
+            entries.length === 1
+                ? " category"
+                : " categories"
+        );
+
+
+    renderDonut(
+        entries,
+        total
+    );
+
+
+    if(
+        entries.length === 0
+    ){
+
+        categoryList.innerHTML = `
+
+            <div class="empty">
+
+                No expenses found
+                for this period.
+
+                <br><br>
+
+                Add expenses from
+                <b>My Expenses</b>.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    categoryList.innerHTML =
+        "";
+
+
+    entries.forEach(
+        function(entry,index){
+
+            const name =
+                entry[0];
+
+            const data =
+                entry[1];
+
+            const amount =
+                data.amount;
+
+            const count =
+                data.count;
+
+            const percentage =
+                total > 0
+                    ? (
+                        amount /
+                        total
+                    ) * 100
+                    : 0;
+
+            const icon =
+                getCategoryIcon(
+                    name
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "category-row";
+
+
+            row.innerHTML = `
+
+                <div class="category-icon">
+
+                    ${icon}
+
+                </div>
+
+
+                <div class="category-info">
+
+                    <div class="category-name">
+
+                        ${escapeHtml(
+                            name
+                        )}
+
+                    </div>
+
+                    <div class="category-meta">
+
+                        ${count}
+                        ${
+                            count === 1
+                                ? "expense"
+                                : "expenses"
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="category-money">
+
+                    <div class="category-amount">
+
+                        ${formatMoney(
+                            amount
+                        )}
+
+                    </div>
+
+                    <div class="category-progress">
+
+                        <div
+                            class="category-progress-fill"
+                            style="
+                                width:${Math.min(
+                                    percentage,
+                                    100
+                                )}%;
+                            "
+                        ></div>
+
+                    </div>
+
+                    <div class="category-percent">
+
+                        ${Math.round(
+                            percentage
+                        )}%
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            categoryList.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HTML SAFETY
+========================================================= */
+
+function escapeHtml(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   PERIOD BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".period"
+    )
+    .forEach(
+        function(button){
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    document
+                        .querySelectorAll(
+                            ".period"
+                        )
+                        .forEach(
+                            function(item){
+
+                                item.classList
+                                    .remove(
+                                        "active"
+                                    );
+
+                            }
+                        );
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                    selectedPeriod =
+                        this.dataset.period;
+
+
+                    if(
+                        selectedPeriod ===
+                        "custom"
+                    ){
+
+                        customBox.classList.add(
+                            "show"
+                        );
+
+                        updatePeriodLabels();
+
+                        return;
+
+                    }
+
+
+                    customBox.classList.remove(
+                        "show"
+                    );
+
+
+                    updatePeriodLabels();
+
+                    updateSummary();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   CUSTOM DATE
+========================================================= */
+
+applyButton.addEventListener(
+    "click",
+    function(){
+
+        if(
+            !startDate.value ||
+            !endDate.value
+        ){
+
+            alert(
+                "Please select both start and end dates."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            startDate.value >
+            endDate.value
+        ){
+
+            alert(
+                "Start date cannot be after end date."
+            );
+
+            return;
+
+        }
+
+
+        updatePeriodLabels();
+
+        updateSummary();
+
+    }
+);
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        function(event){
+
+            if(
+                event ===
+                "SIGNED_OUT"
+            ){
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadProfile();
+
+loadExpenses();
+
+updatePeriodLabels();
+
+</script>
+
+  </body>
+</html>

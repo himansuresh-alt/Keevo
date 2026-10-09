@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#FF6B35"
+    >
+
+    <title>Create Account - BillSafe</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        body{
+            font-family:Arial,sans-serif;
+            background:#f5f6f8;
+            color:#181a1f;
+        }
+
+        .page{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        }
+
+        .box{
+            width:100%;
+            max-width:420px;
+            background:#ffffff;
+            padding:30px 22px;
+            border-radius:24px;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .logo{
+            text-align:center;
+            font-size:36px;
+            font-weight:900;
+            margin-bottom:5px;
+        }
+
+        .logo span{
+            color:#FF6B35;
+        }
+
+        .tagline{
+            text-align:center;
+            color:#777;
+            font-size:13px;
+            margin-bottom:28px;
+        }
+
+        h1{
+            font-size:25px;
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            color:#777;
+            font-size:14px;
+            margin-bottom:25px;
+            line-height:1.5;
+        }
+
+        label{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:7px;
+        }
+
+        .input{
+            width:100%;
+            padding:14px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            outline:none;
+            font-size:15px;
+            margin-bottom:16px;
+        }
+
+        .input:focus{
+            border-color:#FF6B35;
+        }
+
+        .btn{
+            width:100%;
+            border:none;
+            padding:15px;
+            border-radius:13px;
+            background:#FF6B35;
+            color:white;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+            margin-top:5px;
+        }
+
+        .btn:disabled{
+            opacity:0.6;
+            cursor:not-allowed;
+        }
+
+        .login{
+            text-align:center;
+            margin-top:22px;
+            font-size:14px;
+            color:#777;
+        }
+
+        .login a{
+            color:#FF6B35;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .back{
+            display:block;
+            text-align:center;
+            margin-top:18px;
+            color:#555;
+            text-decoration:none;
+            font-size:13px;
+        }
+
+        .note{
+            margin-top:18px;
+            font-size:12px;
+            color:#888;
+            line-height:1.5;
+            text-align:center;
+        }
+
+        .message{
+            display:none;
+            margin-bottom:18px;
+            padding:12px;
+            border-radius:10px;
+            font-size:13px;
+            line-height:1.5;
+        }
+
+        .message.success{
+            display:block;
+            background:#eaf8ef;
+            color:#18743a;
+        }
+
+        .message.error{
+            display:block;
+            background:#fff0f0;
+            color:#c62828;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="box">
+
+        <div class="logo">
+            KEEVO
+        </div>
+
+        <div class="tagline">
+            Keep every bill safe.
+        </div>
+
+
+        <h1>
+            Create Account
+        </h1>
+
+        <p class="subtitle">
+            Create your KEEVO account and start
+            saving your bills securely.
+        </p>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <form id="signupForm">
+
+            <label for="fullName">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="fullName"
+                class="input"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+            >
+
+
+            <label for="mobile">
+                Mobile Number
+            </label>
+
+            <input
+                type="tel"
+                id="mobile"
+                class="input"
+                placeholder="Enter mobile number"
+                maxlength="10"
+                inputmode="numeric"
+                autocomplete="tel"
+                required
+            >
+
+
+            <label for="email">
+                Email ID
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                class="input"
+                placeholder="Enter email address"
+                autocomplete="email"
+                required
+            >
+
+
+            <label for="password">
+                Create Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                class="input"
+                placeholder="Create a password"
+                minlength="6"
+                autocomplete="new-password"
+                required
+            >
+
+
+            <label for="confirmPassword">
+                Confirm Password
+            </label>
+
+            <input
+                type="password"
+                id="confirmPassword"
+                class="input"
+                placeholder="Confirm your password"
+                minlength="6"
+                autocomplete="new-password"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="btn"
+                id="createBtn"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <div class="login">
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+
+        <a
+            href="index.html"
+            class="back"
+        >
+            ← Back to KEEVO
+        </a>
+
+
+        <div class="note">
+            Your account will be used to securely
+            store and manage your bills.
+        </div>
+
+    </div>
+
+</div>
+
+  <!-- Supabase JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+/* =================================
+   BILLSAFE SUPABASE CONNECTION
+================================= */
+
+const SUPABASE_URL =
+    "https://fuymbbdnahkxnztlvdfr.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const signupForm =
+    document.getElementById(
+        "signupForm"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const createBtn =
+    document.getElementById(
+        "createBtn"
+    );
+
+
+const fullNameInput =
+    document.getElementById(
+        "fullName"
+    );
+
+
+const mobileInput =
+    document.getElementById(
+        "mobile"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+const confirmPasswordInput =
+    document.getElementById(
+        "confirmPassword"
+    );
+
+
+/* =================================
+   SHOW MESSAGE
+================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+/* =================================
+   MOBILE INPUT CLEANUP
+================================= */
+
+mobileInput.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+            .replace(
+                /[^0-9]/g,
+                ""
+            )
+            .slice(
+                0,
+                10
+            );
+
+    }
+);
+
+
+/* =================================
+   NAME CLEANUP
+================================= */
+
+fullNameInput.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+            .replace(
+                /^\s+/,
+                ""
+            )
+            .replace(
+                /\s{2,}/g,
+                " "
+            );
+
+    }
+);
+
+
+/* =================================
+   CREATE ACCOUNT
+================================= */
+
+signupForm.addEventListener(
+    "submit",
+    async function(event){
+
+        event.preventDefault();
+
+
+        /* ==========================
+           GET VALUES
+        ========================== */
+
+        const fullName =
+            fullNameInput
+            .value
+            .trim();
+
+
+        const mobile =
+            mobileInput
+            .value
+            .trim();
+
+
+        const email =
+            emailInput
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+            passwordInput.value;
+
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+
+        /* ==========================
+           NAME VALIDATION
+        ========================== */
+
+        if(!fullName){
+
+            showMessage(
+                "Please enter your full name.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if(fullName.length < 2){
+
+            showMessage(
+                "Please enter a valid full name.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           MOBILE VALIDATION
+        ========================== */
+
+        if(
+            !/^[0-9]{10}$/.test(
+                mobile
+            )
+        ){
+
+            showMessage(
+                "Please enter a valid 10-digit mobile number.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           EMAIL VALIDATION
+        ========================== */
+
+        if(!email){
+
+            showMessage(
+                "Please enter your email address.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           PASSWORD VALIDATION
+        ========================== */
+
+        if(
+            password.length < 6
+        ){
+
+            showMessage(
+                "Password must contain at least 6 characters.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           CONFIRM PASSWORD
+        ========================== */
+
+        if(
+            password !==
+            confirmPassword
+        ){
+
+            showMessage(
+                "Passwords do not match.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================
+           BUTTON STATE
+        ========================== */
+
+        createBtn.disabled =
+            true;
+
+        createBtn.textContent =
+            "Creating Account...";
+
+
+        try{
+
+            /* ======================
+               SUPABASE SIGNUP
+            ====================== */
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                .auth
+                .signUp({
+
+                    email:email,
+
+                    password:password,
+
+                    options:{
+
+                        data:{
+
+                            full_name:
+                                fullName,
+
+                            mobile:
+                                mobile
+
+                        }
+
+                    }
+
+                });
+
+
+            /* ======================
+               SUPABASE ERROR
+            ====================== */
+
+            if(error){
+
+                throw error;
+
+            }
+
+
+            /* ======================
+               SUCCESS
+            ====================== */
+
+            if(data && data.user){
+
+                showMessage(
+                    "Account created successfully! Redirecting to login...",
+                    "success"
+                );
+
+
+                signupForm.reset();
+
+
+                createBtn.textContent =
+                    "Account Created ✓";
+
+
+                setTimeout(
+                    function(){
+
+                        window.location.href =
+                            "login.html";
+
+                    },
+                    1500
+                );
+
+
+                return;
+
+            }
+
+
+            /* ======================
+               UNEXPECTED RESPONSE
+            ====================== */
+
+            throw new Error(
+                "Account could not be created. Please try again."
+            );
+
+
+        }
+        catch(error){
+
+            console.error(
+                "Create account error:",
+                error
+            );
+
+
+            let errorMessage =
+                "Unable to create account. Please try again.";
+
+
+            if(
+                error &&
+                error.message
+            ){
+
+                errorMessage =
+                    error.message;
+
+            }
+
+
+            /*
+              Make common Supabase
+              messages more user-friendly.
+            */
+
+            const lowerMessage =
+                errorMessage.toLowerCase();
+
+
+            if(
+                lowerMessage.includes(
+                    "user already registered"
+                ) ||
+                lowerMessage.includes(
+                    "already registered"
+                )
+            ){
+
+                errorMessage =
+                    "An account with this email already exists. Please login.";
+
+            }
+
+
+            showMessage(
+                errorMessage,
+                "error"
+            );
+
+
+            createBtn.disabled =
+                false;
+
+
+            createBtn.textContent =
+                "Create Account";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
