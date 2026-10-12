@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KEEVO Smart Digital Card</title>
+<style>
+:root{--bg:#070b17;--panel:#101a30;--orange:#ff7043;--violet:#7759ff;--text:#f7f8ff;--muted:#aab6d1}
+*{box-sizing:border-box}
+body{margin:0;padding:0 14px 35px;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(ellipse at 10% 0%,#40221f 0,transparent 33%),radial-gradient(ellipse at 95% 18%,#211c52 0,transparent 35%),linear-gradient(145deg,#050813,#0b1428 60%,#070914);min-height:100vh}
+.wrap{max-width:720px;margin:auto}
+.top{padding:23px 4px 20px;display:flex;align-items:center;gap:13px}
+.logo{height:46px;width:46px;border-radius:15px;display:grid;place-items:center;font-weight:1000;font-size:22px;background:linear-gradient(140deg,#ff9b5d,#ff4c2e 50%,#7956ff);box-shadow:0 0 24px #ff693d55}
+.brand{font-weight:950;font-size:21px;letter-spacing:-.5px}
+.brand span{color:#ff8959}
+.brand small{display:block;font-size:11px;letter-spacing:2px;color:#aeb9d4;font-weight:700;margin-top:2px}
+.hero{text-align:center;padding:17px 8px 24px}
+.pill{display:inline-block;border:1px solid #ff936b66;color:#ffb99c;background:#ff713d16;padding:7px 11px;border-radius:999px;font-size:10px;letter-spacing:1.3px;font-weight:900}
+.hero h1{font-size:clamp(27px,6vw,42px);line-height:1.1;letter-spacing:-1.4px;margin:16px 0 9px}
+.hero h1 span{background:linear-gradient(90deg,#ff7043,#ffc08b);background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:13px;line-height:1.65;margin:0 auto;max-width:470px}
+.panel{background:linear-gradient(145deg,#192642d9,#0c1428ed);border:1px solid #ffffff20;border-radius:25px;padding:19px;box-shadow:0 20px 50px #0006,inset 0 1px #ffffff13;margin-bottom:17px;backdrop-filter:blur(15px)}
+.panel h2{font-size:18px;margin:0 0 5px}
+.muted{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 15px}
+label{display:block;font-size:12px;font-weight:800;margin:12px 0 6px;color:#e3e9fa}
+input,textarea{width:100%;border:1px solid #ffffff20;border-radius:12px;background:#060d1eaa;color:#fff;padding:12px;font:inherit;font-size:14px;outline:none}
+input:focus,textarea:focus{border-color:#ff926d;box-shadow:0 0 0 3px #ff713d18}
+input::placeholder,textarea::placeholder{color:#71809f}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.btn{border:1px solid #ffffff25;border-radius:14px;padding:14px 12px;width:100%;font-weight:900;font-size:13px;color:white;cursor:pointer;background:linear-gradient(120deg,#ff8c50,#ff4b27);box-shadow:0 9px 24px #ff552d30,inset 0 1px #ffffff60;transition:.18s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn.secondary{background:linear-gradient(145deg,#ffffff12,#ffffff04);box-shadow:inset 0 1px #ffffff14}
+.btn.purple{background:linear-gradient(110deg,#4e43d8,#8952ff);box-shadow:0 9px 24px #7054ff35}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.note{font-size:11px;color:#a8b4d0;line-height:1.6;margin-top:12px}
+.card{position:relative;overflow:hidden;text-align:center;border-radius:24px;padding:24px 15px 19px;background:radial-gradient(circle at 100% 0%,#ff743d38,transparent 34%),radial-gradient(circle at 0% 85%,#7959ff35,transparent 36%),linear-gradient(145deg,#182642,#091326 72%,#17142d);border:1px solid #ffffff40;box-shadow:0 22px 50px #0006,inset 0 1px #ffffff40}
+.card:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:24px;padding:1px;background:linear-gradient(140deg,#ffb47c,#ffffff12 30%,#8270ff 62%,#ff7043);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.avatar{height:104px;width:104px;border-radius:50%;margin:0 auto 13px;display:grid;place-items:center;background:linear-gradient(140deg,#ff995e,#ff593c,#7857ff);border:3px solid #fff9;box-shadow:0 0 0 5px #ff713d16,0 0 28px #ff713d55;font-size:31px;font-weight:1000;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.name{font-size:29px;font-weight:1000;letter-spacing:-.8px;overflow-wrap:anywhere}
+.role{color:#c1cce5;font-size:13px;margin:5px 0 19px;overflow-wrap:anywhere}
+.links{display:grid;gap:8px;text-align:left}
+.linkrow{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;border:1px solid #ffffff20;border-radius:14px;padding:11px 12px;background:linear-gradient(110deg,#ffffff12,#ffffff05);min-width:0;transition:.18s}
+.linkrow:hover{border-color:#ff9a6d88;transform:translateY(-1px)}
+.ico{width:36px;height:36px;flex:0 0 36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#ff854a,#c94729);font-size:17px;box-shadow:0 4px 13px #0004}
+.linkrow:nth-child(2) .ico,.linkrow:nth-child(5) .ico{background:linear-gradient(145deg,#8664ff,#4b39c6)}
+.linkrow:nth-child(4) .ico{background:linear-gradient(145deg,#25d366,#078f52)}
+.linkrow:nth-child(6) .ico{background:linear-gradient(145deg,#f64ba6,#6849e9)}
+.linktext{min-width:0;overflow-wrap:anywhere}
+.linktext small{display:block;font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:#aebbd7;margin-bottom:2px}
+.linktext strong{display:block;font-size:12px;font-weight:700;color:#b8d4ff;overflow-wrap:anywhere}
+.qrbox{background:#fff;border-radius:19px;padding:12px;width:fit-content;margin:22px auto 9px;box-shadow:0 0 0 2px #ff8b5e,0 0 30px #ff713d35}
+.qrbox img{display:block;width:176px;height:176px;image-rendering:pixelated}
+.qr-caption{font-size:11px;line-height:1.6;color:#b3bfd9;max-width:430px;margin:0 auto}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.actions .btn:last-child{grid-column:1/-1}
+.hidden{display:none!important}
+.footer{text-align:center;color:#71809f;font-size:11px;padding:8px 8px 18px;line-height:1.6}
+.status{margin-top:10px;padding:10px;border-radius:11px;background:#ff8b5e16;border:1px solid #ff8b5e35;color:#ffdfcc;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:480px){
+body{padding:0 10px 25px}
+.panel{padding:15px}
+.grid{grid-template-columns:1fr}
+.hero{padding-top:12px}
+.card{padding:20px 10px 16px}
+.linkrow{padding:10px 9px}
+.name{font-size:25px}
+.qrbox img{width:160px;height:160px}
+}
+@media print{
+body{background:#fff;color:#111;padding:0}
+.top,.hero,.formpanel,.actions,.footer,.panel>h2,.panel>.muted{display:none!important}
+.panel{background:#fff;border:0;box-shadow:none;padding:0}
+.card{background:#fff;color:#111;box-shadow:none;border:1px solid #ddd}
+.role,.qr-caption{color:#555}
+.linkrow{background:#fff;border-color:#ddd;color:#111}
+.linktext small{color:#666}
+.linktext strong{color:#111}
+.ico{box-shadow:none}
+.qrbox{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+<div class="logo">K</div>
+<div class="brand">KEE<span>VO</span><small>SMART DIGITAL CARD</small></div>
+</header>
+<section class="hero" id="hero">
+<span class="pill">✦ INTERACTIVE PROTOTYPE</span>
+<h1>Your identity.<br><span>One smart QR.</span></h1>
+<p>Scan the QR to open a digital profile. Visitors can call, WhatsApp, visit your website or Instagram, and save your contact.</p>
+</section>
+<section class="panel formpanel" id="editor">
+<h2>Create your visiting card</h2>
+<p class="muted">Edit the sample details and tap Create Smart Card to preview.</p>
+<form id="cardForm">
+<div class="grid">
+<div><label for="fullName">Full name *</label><input id="fullName" required value="Your Name" placeholder="Your name"></div>
+<div><label for="role">Business / profession</label><input id="role" placeholder="Your role or business"></div>
+<div><label for="phone">Mobile number</label><input id="phone" inputmode="tel" placeholder="Mobile number"></div>
+<div><label for="email">Email</label><input id="email" type="email" placeholder="Email address"></div>
+<div><label for="whatsapp">WhatsApp number</label><input id="whatsapp" inputmode="tel" placeholder="WhatsApp number with country code"></div>
+<div><label for="website">Website URL</label><input id="website" type="url" placeholder="https://example.com"></div>
+<div><label for="instagram">Instagram URL</label><input id="instagram" type="url" placeholder="https://instagram.com/you"></div>
+<div><label for="address">Location / address</label><input id="address" placeholder="Your address"></div>
+</div>
+<label for="photo">Profile photo (optional)</label>
+<input id="photo" type="file" accept="image/*">
+<button class="btn" type="submit" id="createBtn" style="margin-top:17px">✦ Create Smart Digital Card</button>
+<div id="formStatus" class="status hidden"></div>
+</form>
+</section>
+<section class="panel hidden" id="profilePanel">
+<h2 style="margin-bottom:5px">Live card preview</h2>
+<p class="muted">This is the page a visitor sees after opening your profile link.</p>
+<div class="card" id="profileCard">
+<div class="avatar" id="avatar">Y</div>
+<div class="name" id="outName">Your Name</div>
+<div class="role" id="outRole"></div>
+<div class="links" id="outLinks"></div>
+<div class="qrbox"><img id="profileQr" alt="QR code for this prototype profile"></div>
+<div class="qr-caption" id="qrCaption">Prototype QR. Host this page online before sharing the QR with others.</div>
+</div>
+<div class="actions">
+<button class="btn" type="button" id="saveContact">＋ Save Contact</button>
+<button class="btn secondary" type="button" id="downloadQr">↓ Download QR PNG</button>
+<button class="btn secondary" type="button" id="printCard">▣ Print Card</button>
+<button class="btn purple" type="button" id="shareCard">↗ Share Visiting Card</button>
+<button class="btn secondary" type="button" id="editCard">Edit Details</button>
+</div>
+<div id="profileStatus" class="status hidden"></div>
+<p class="note">Prototype only: a public QR needs this page hosted online. A production version should use a stable profile URL and database so the QR stays short and editable.</p>
+</section>
+<div class="footer">KEEVO Digital QR • Smart visiting card prototype</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const SUPABASE_URL="https://fuymbbdnahkxnztlvdfr.supabase.co";
+const SUPABASE_KEY="sb_publishable_OYnSR2D-1qDsyaeyxf6gzA_Odjs6Za3";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let photoData="",profileUrl="",currentUser=null,savedSlug="";
+
+function status(el,msg){
+ el.textContent=msg;
+ el.classList.remove("hidden");
+}
+function safeUrl(raw){
+ if(!raw)return"";
+ try{
+  const u=new URL(raw);
+  return /^https?:$/.test(u.protocol)?u.href:"";
+ }catch{return""}
+}
+function digits(s){return(s||"").replace(/\D/g,"")}
+function escapeHtml(s){
+ return String(s||"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]))
+}
+function addLink(label,value,icon,href){
+ if(!value)return"";
+ return `<a class="linkrow" href="${escapeHtml(href||"#")}" ${href?'target="_blank" rel="noopener noreferrer"':""}><span class="ico">${icon}</span><span class="linktext"><small>${label}</small><strong>${escapeHtml(value)}</strong></span></a>`;
+}
+
+
+  
+$("photo").addEventListener("change",function(){
+ const f=this.files&&this.files[0];
+ if(!f){photoData="";return}
+ if(!f.type.startsWith("image/")){
+  status($("formStatus"),"Please choose an image file.");return;
+ }
+ if(f.size>5*1024*1024){
+  status($("formStatus"),"Choose a photo smaller than 5 MB.");
+  this.value="";return;
+ }
+ const r=new FileReader();
+ r.onload=()=>photoData=String(r.result);
+ r.readAsDataURL(f);
+});
+
+function renderCard(d){
+ $("outName").textContent=d.name||"";
+ $("outRole").textContent=d.role||"";
+ $("avatar").innerHTML=d.photo
+  ?`<img alt="Profile photo" src="${d.photo}">`
+  :escapeHtml((d.name||"?").split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase());
+ let rows="";
+ if(d.phone)rows+=addLink("Mobile",d.phone,"☎","tel:"+digits(d.phone));
+ if(d.email)rows+=addLink("Email",d.email,"✉","mailto:"+d.email);
+ if(d.address)rows+=addLink("Location",d.address,"⌖","https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(d.address));
+ if(d.whatsapp)rows+=addLink("WhatsApp",d.whatsapp,"◉","https://wa.me/"+digits(d.whatsapp));
+ if(d.website)rows+=addLink("Website",d.website.replace(/^https?:\/\//,""),"◎",d.website);
+ if(d.instagram)rows+=addLink("Instagram",d.instagram.replace(/^https?:\/\//,""),"◎",d.instagram);
+ $("outLinks").innerHTML=rows;
+ $("profilePanel").classList.remove("hidden");
+}
+
+function showQr(url){
+ profileUrl=url;
+ $("profileQr").src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=10&data="+encodeURIComponent(url);
+ $("qrCaption").textContent="Scan to open this public digital card.";
+}
+
+$("cardForm").addEventListener("submit",async function(e){
+ e.preventDefault();
+ const d={
+  name:$("fullName").value.trim(),
+  role:$("role").value.trim(),
+  phone:$("phone").value.trim(),
+  email:$("email").value.trim(),
+  whatsapp:$("whatsapp").value.trim(),
+  website:safeUrl($("website").value.trim()),
+  instagram:safeUrl($("instagram").value.trim()),
+  address:$("address").value.trim(),
+  photo:photoData
+ };
+
+ if(!d.name){
+  status($("formStatus"),"Please enter your name.");
+  return;
+ }
+
+ const {data:sessionData,error:sessionError}=await db.auth.getSession();
+ currentUser=sessionData&&sessionData.session?sessionData.session.user:null;
+
+ if(sessionError||!currentUser){
+  status($("formStatus"),"Please sign in to your KEEVO account first, then open this Digital QR page again. Your existing login page has not been changed.");
+  return;
+ }
+
+ const payload={
+  user_id:currentUser.id,
+  full_name:d.name,
+  business_name:d.role,
+  mobile:d.phone,
+  email:d.email,
+  whatsapp:d.whatsapp,
+  website:d.website,
+  instagram:d.instagram,
+  address:d.address,
+  photo_url:d.photo,
+  is_published:true,
+  updated_at:new Date().toISOString()
+ };
+
+ const btn=$("createBtn");
+ btn.disabled=true;
+ btn.textContent="Saving Card...";
+
+ try{
+  let saveResult=await db.from("digital_cards")
+   .upsert(payload,{onConflict:"user_id"})
+   .select("slug").single();
+
+  if(saveResult.error)throw saveResult.error;
+
+  savedSlug=saveResult.data.slug;
+  renderCard(d);
+
+  const base=location.href.split("#")[0].split("?")[0];
+  showQr(base+"?slug="+encodeURIComponent(savedSlug));
+
+  $("profilePanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+  status($("profileStatus"),"Card saved to Supabase. Your QR uses your unique card URL. Keep this page hosted online for public scanning.");
+
+ }catch(err){
+  console.error("Digital card save error:",err);
+  status($("formStatus"),"Could not save the card: "+(err.message||"Please check the digital_cards table columns and RLS policies."));
+ }finally{
+  btn.disabled=false;
+  btn.textContent="✦ Create Smart Digital Card";
+ }
+});
+
+async function loadPublicCard(slug){
+ $("editor").classList.add("hidden");
+ $("hero").classList.add("hidden");
+
+ try{
+  const {data,error}=await db.from("digital_cards")
+   .select("slug,full_name,business_name,mobile,email,whatsapp,website,instagram,address,photo_url,is_published")
+   .eq("slug",slug)
+   .eq("is_published",true)
+   .maybeSingle();
+
+  if(error)throw error;
+
+  if(!data){
+   $("profilePanel").classList.remove("hidden");
+   status($("profileStatus"),"This digital card was not found or is not published.");
+   return;
+  }
+
+  renderCard({
+   name:data.full_name,
+   role:data.business_name,
+   phone:data.mobile,
+   email:data.email,
+   whatsapp:data.whatsapp,
+   website:data.website,
+   instagram:data.instagram,
+   address:data.address,
+   photo:data.photo_url
+  });
+
+  $("profileQr").classList.add("hidden");
+  $("qrCaption").classList.add("hidden");
+  $("profilePanel").querySelector(".actions").classList.add("hidden");
+  status($("profileStatus"),"Public digital visiting card");
+
+ }catch(err){
+  console.error("Public card load error:",err);
+  $("profilePanel").classList.remove("hidden");
+  status($("profileStatus"),"Could not load this card. Check public SELECT access for published digital cards.");
+ }
+}
+
+$("saveContact").addEventListener("click",function(){
+ const name=$("outName").textContent;
+ const role=$("outRole").textContent;
+
+ const link=label=>{
+  const a=[...$("outLinks").querySelectorAll(".linkrow")]
+   .find(x=>x.querySelector("small").textContent===label);
+  return a?a.querySelector("strong").textContent:"";
+ };
+
+ const phone=link("Mobile");
+ const email=link("Email");
+ const address=link("Location");
+ const web=link("Website");
+ const wa=link("WhatsApp");
+ const ig=link("Instagram");
+
+ const v=[
+  "BEGIN:VCARD",
+  "VERSION:3.0",
+  "FN:"+name,
+  "ORG:"+role,
+  phone?"TEL;TYPE=CELL:"+phone:"",
+  email?"EMAIL:"+email:"",
+  address?"ADR;TYPE=WORK:;;"+address+";;;;":"",
+  web?"URL:"+safeUrl(web):"",
+  wa?"X-SOCIALPROFILE;TYPE=whatsapp:https://wa.me/"+digits(wa):"",
+  ig?"X-SOCIALPROFILE;TYPE=instagram:"+safeUrl(ig):"",
+  "END:VCARD"
+ ].filter(Boolean).join("\r\n");
+
+ const blob=new Blob([v],{type:"text/vcard;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download=name.replace(/[^a-z0-9]+/gi,"-").toLowerCase()+"-contact.vcf";
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ URL.revokeObjectURL(url);
+
+ status($("profileStatus"),"Contact file downloaded. Open it on your phone to save the contact.");
+});
+
+$("downloadQr").addEventListener("click",async function(){
+ const img=$("profileQr");
+
+ try{
+  if(!img.complete||!img.naturalWidth){
+   await new Promise((res,rej)=>{
+    img.onload=res;
+    img.onerror=rej;
+   });
+  }
+
+  const c=document.createElement("canvas");
+  c.width=img.naturalWidth;
+  c.height=img.naturalHeight;
+  c.getContext("2d").drawImage(img,0,0);
+
+  const a=document.createElement("a");
+  a.download="keevo-smart-profile-qr.png";
+  a.href=c.toDataURL("image/png");
+  a.click();
+
+  status($("profileStatus"),"QR PNG download started.");
+
+ }catch(e){
+  status($("profileStatus"),"QR download failed. Check your internet connection and try again.");
+ }
+});
+
+$("printCard").addEventListener("click",()=>{
+ window.print();
+});
+
+$("shareCard").addEventListener("click",async function(){
+ const shareData={
+  title:$("outName").textContent+" — Digital Visiting Card",
+  text:"View this digital visiting card",
+  url:profileUrl
+ };
+
+ try{
+  if(navigator.share){
+   await navigator.share(shareData);
+  }else if(navigator.clipboard&&navigator.clipboard.writeText){
+   await navigator.clipboard.writeText(profileUrl);
+   status($("profileStatus"),"Profile link copied. Share it in WhatsApp or another app.");
+  }else{
+   window.prompt("Copy this profile link:",profileUrl);
+  }
+ }catch(e){
+  if(e.name!=="AbortError"){
+   status($("profileStatus"),"Sharing is not supported in this browser.");
+  }
+ }
+});
+
+$("editCard").addEventListener("click",()=>{
+ $("editor").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+const q=new URLSearchParams(location.search);
+
+if(q.get("slug")){
+ loadPublicCard(q.get("slug"));
+}else{
+ db.auth.getSession().then(({data})=>{
+  currentUser=data&&data.session?data.session.user:null;
+
+  if(!currentUser){
+   status($("formStatus"),"To save your card, sign in to your KEEVO account first. This Digital QR page is separate from Bills and Expenses.");
+  }else{
+   db.from("digital_cards")
+    .select("full_name,business_name,mobile,email,whatsapp,website,instagram,address,photo_url,slug")
+    .eq("user_id",currentUser.id)
+    .maybeSingle()
+    .then(({data:card,error})=>{
+     if(error){
+      console.error(error);
+      status($("formStatus"),"Could not load your saved card: "+error.message);
+      return;
+     }
+
+     if(card){
+      $("fullName").value=card.full_name||"";
+      $("role").value=card.business_name||"";
+      $("phone").value=card.mobile||"";
+      $("email").value=card.email||"";
+      $("whatsapp").value=card.whatsapp||"";
+      $("website").value=card.website||"";
+      $("instagram").value=card.instagram||"";
+      $("address").value=card.address||"";
+      photoData=card.photo_url||"";
+      savedSlug=card.slug||"";
+
+      status($("formStatus"),"Your saved digital card is loaded. Edit details and create the card again to update it.");
+     }
+    });
+  }
+ });
+}
+})();
+</script>
+</body>
+</html>
